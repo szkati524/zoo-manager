@@ -1,0 +1,36 @@
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+
+# STS / Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+
+# Pliki systemowe
+.DS_Store
+Thumbs.db
+
+# Spring
+src/main/resources/application.properties

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZooAnimal</title>
+</head>
+<body>
+<h1>Nasze zwierzęta:</h1>
+<!-- tutaj dodam różne opcje wyszukiwania po imieniu,po gatunku,po opiekunach -->
+<form th:action="@{/animals}" method="get" th:object="${animal}">
+    <table>
+    <tr th:each="animal : ${animals}">
+        <td th:text="${animal.name}"></td>
+        <td th:text="${animal.species}"></td>
+    </tr>
+    </table>
+</form>
+
+</body>
+</html>

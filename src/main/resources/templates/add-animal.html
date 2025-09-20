@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZooAnimal</title>
+</head>
+<body>
+<h1>Dodaj zwierzę:</h1>
+<form th:action="@{/add-animal}" method="post" th:object="${animal}">
+<label for="name">Imię zwierzęcia:</label>
+<input type="text" id="name" th:field="*{name}" required>
+<label for="species">Gatunek:</label>
+<input type="text" id="species" th:field="*{species}" required>
+    <button type="submit">Dodaj zwierzę</button>
+</form>
+<div th:if="${success}" style="color:green;">
+    Zwierzątko dodane!!!
+</div>
+    <div th:if="${error}" style="color:red;">
+        Dodanie zwierzątka nie powiodło się
+    </div>
+
+<a th:href="@{/animals}">Zobacz nasze zwierzęta</a>
+
+</body>
+</html>
