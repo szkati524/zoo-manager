@@ -25,10 +25,14 @@ public class AnimalService {
     public List<Animal> getAllAnimals(){
         return animalRepository.findAll();
     }
-    public Animal getAnimalByName(String name){
-        return animalRepository.findByName(name);
-    }
-    public List<Animal> findBySpecies(String species){
-        return animalRepository.findBySpecies(species);
+public List<Animal> searchAnimal(String name,String species,Boolean currentVaccination,String employeeName,String employeeSurname){
+        return animalRepository.searchAnimals(name,species,currentVaccination,employeeName,employeeSurname);
+}
+public void deleteAnimalById(Long id,Animal animal){
+         animalRepository.deleteById(id);
+}
+
+    public List<Animal> findAllByIds(List<Long> Ids) {
+        return animalRepository.findAllById(Ids);
     }
 }

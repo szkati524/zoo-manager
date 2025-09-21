@@ -10,20 +10,34 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String surName;
+    private String surname;
     private String email;
 
-   /* private List<Animal> animalsToZooKeeper = new ArrayList<>(); */
+    private String profession;
+    @Transient
+    private List<Long> animalIds = new ArrayList<>();
+@ManyToMany(mappedBy = "employees")
+  private List<Animal> animals = new ArrayList<>();
 
 
     public Employee(){
 
     }
 
-    public Employee(String name, String surName, String email) {
+    public Employee(String name, String surname, String email, String profession, List<Animal> animals) {
         this.name = name;
-        this.surName = surName;
+        this.surname = surname;
         this.email = email;
+        this.profession = profession;
+        this.animals = animals;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -34,12 +48,12 @@ public class Employee {
         this.name = name;
     }
 
-    public String getSurName() {
-        return surName;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {
@@ -50,5 +64,39 @@ public class Employee {
         this.email = email;
     }
 
+    public String getProfession() {
+        return profession;
+    }
 
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
+
+    public List<Animal> getAnimals() {
+        return animals;
+    }
+
+    public void setAnimals(List<Animal> animals) {
+        this.animals = animals;
+    }
+
+    public List<Long> getAnimalIds() {
+        return animalIds;
+    }
+
+    public void setAnimalIds(List<Long> animalIds) {
+        this.animalIds = animalIds;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", profession='" + profession + '\'' +
+                ", animals=" + animals +
+                '}';
+    }
 }

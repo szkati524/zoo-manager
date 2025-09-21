@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZooAnimal</title>
+</head>
+<body>
+<h1>Nasi pracownicy:</h1>
+<form th:action="@{/employee}" method="get" th:object="${employee}">
+    <table>
+        <tr>
+            <th>Imię:</th>
+            <th>Nazwisko:</th>
+            <th>Email:</th>
+            <th>Zawód:</th>
+        </tr>
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.name}"></td>
+            <td th:text="${employee.surname}"></td>
+            <td th:text="${employee.email}"></td>
+            <td th:text="${employee.profession}"></td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

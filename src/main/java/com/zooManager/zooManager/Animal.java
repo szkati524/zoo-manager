@@ -6,21 +6,33 @@ import java.util.*;
 @Entity
 public class Animal {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String species;
+    private Boolean currentVaccination;
+@ManyToMany
+  private List<Employee> employees = new ArrayList<>();
 
-    /* private List<Employee> employeeList = new ArrayList<>(); */
 
 
-    public Animal() {
+  public Animal(){
 
-    }
+  }
 
-    public Animal(String name, String species) {
+    public Animal(String name, String species, Boolean currentVaccination, List<Employee> employees) {
         this.name = name;
         this.species = species;
+        this.currentVaccination = currentVaccination;
+        this.employees = employees;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -39,7 +51,33 @@ public class Animal {
         this.species = species;
     }
 
+    public Boolean getCurrentVaccination() {
+        return currentVaccination;
+    }
 
+    public void setCurrentVaccination(Boolean currentVaccination) {
+        this.currentVaccination = currentVaccination;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", species='" + species + '\'' +
+                ", currentVaccination=" + currentVaccination +
+                ", employees=" + employees +
+                '}';
+    }
 }
 
 

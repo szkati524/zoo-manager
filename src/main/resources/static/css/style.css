@@ -1,0 +1,46 @@
+body {
+    background-image: url('../img/zoo-menu.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: white;
+    margin:0;
+}
+.fixed-menu{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position:fixed;
+    top:0;
+    width:100%;
+    background-color: black;
+    color:white;
+    z-index:1000;
+    background-image: url('../img/logo.jpg');
+    background-repeat: no-repeat;
+    background-position: 20px center;
+    background-size: 50px auto;
+
+}
+.fixed-menu ul{
+    list-style-type: none;
+    margin-right:40px;
+    padding:0;
+
+}
+.fixed-menu li{
+    display:inline-block;
+    margin-left:20px;
+}
+.fixed-menu a {
+    color:white;
+    text-decoration: none;
+    font-weight:bold;
+    padding:10px 15px;
+    transition: background-color 0.3s, color 0,3s;
+}
+.fixed-menu a:hover{
+    background-color: rgba(255, 255, 255, 0.1);
+    color:beige;
+}

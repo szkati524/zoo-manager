@@ -6,8 +6,20 @@
     <title>ZooAnimal</title>
 </head>
 <body>
+<h1>Wyszukaj:</h1>
+<form th:action="@{/animals}" method="get">
+    <input type="text" name="name" placeholder="Imię zwierzęcia" th:value="${name}">
+    <input type="text" name="species" placeholder="Gatunek" th:value="${species}">
+    <select name="currentVaccination">
+        <option th:value="${null}" th:selected="${currentVaccination == null}">Wszystkie</option>
+        <option th:value="true" th:selected="${currentVaccination == true}">Zaszczepione</option>
+        <option th:value="false" th:selected="${currentVaccination == false}">Niezaszczepione</option>
+    </select>
+    <input type="text" name="employeeName" placeholder="Imię pracownika" th:value="${employeeName}">
+    <input type="text" name="employeeSurname" placeholder="Nazwisko pracownika" th:value="${employeeSurname}">
+    <button type="submit">Szukaj</button>
+</form>
 <h1>Nasze zwierzęta:</h1>
-<!-- tutaj dodam różne opcje wyszukiwania po imieniu,po gatunku,po opiekunach -->
 <form th:action="@{/animals}" method="get" th:object="${animal}">
     <table>
     <tr th:each="animal : ${animals}">

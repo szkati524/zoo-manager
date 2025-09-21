@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZooAnimal</title>
+</head>
+<body>
+<h1>Dodaj Pracownika:</h1>
+<form th:action="@{/add-employee}" method="post" th:object="${employee}">
+    <label for="name">Imię Pracownika:</label>
+    <input type="text" id="name" th:field="*{name}" required>
+    <label for="surname">Nazwisko:</label>
+    <input type="text" id="surname" th:field="*{surname}" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required>
+    <label for="profession">Zawód:</label>
+    <input type="text" id="profession" th:field="*{profession}" required>
+    <label for="animals">Przypisz zwierzęta(opcjonalnie):</label>
+    <select id="animals" th:field="*{animalIds}" multiple>
+        <option th:each="animal : ${allAnimals}"
+                th:value="${animal.id}"
+                th:text="${animal.name} + ' (' + animal.species + ')'"></option>
+    </select>
+    <button type="submit">Dodaj Pracownika:</button>
+</form>
+<div th:if="${success}" style="color:green;">
+    Pracownik został dodany
+</div>
+<div th:if="${error}" style="color:red;">
+    Wystąpił błąd
+</div>
+
+
+
+</body>
+</html>
