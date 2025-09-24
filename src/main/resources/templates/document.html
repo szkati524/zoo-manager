@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents</title>
+</head>
+<body>
+<h1>Wyszukaj:</h1>
+<form th:action="@{/documents}" method="get">
+    <input type="text" name="title" placeholder="Tytuł dokumentu" >
+    <input type="text" name="employeeName" placeholder="Imię pracownika">
+   <input type="text" name="employeeSurname" placeholder="Nazwisko pracownika">
+    <input type="datetime-local" name="createdAfter">
+    <select name="category">
+    <option value="">Wszystkie:</option>
+    <option th:each="c : ${T(com.zooManager.zooManager.DocumentCategory).values()}"
+            th:value="${c}"
+            th:text="${c}"></option>
+    </select>
+    <button type="submit">Szukaj</button>
+</form>
+</body>
+</html>
