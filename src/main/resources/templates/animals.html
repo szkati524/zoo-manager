@@ -20,14 +20,24 @@
     <button type="submit">Szukaj</button>
 </form>
 <h1>Nasze zwierzęta:</h1>
-<form th:action="@{/animals}" method="get" th:object="${animal}">
-    <table>
+<table>
+
     <tr th:each="animal : ${animals}">
         <td th:text="${animal.name}"></td>
         <td th:text="${animal.species}"></td>
+        <td>
+            <form th:action="@{/animals/delete/{id}(id=${animal.id})}" method="post">
+                <button type="submit"
+                        onclick="return confirm('czy napewno chcesz usunąć zwierzę?');">
+                    Usuń
+                </button>
+
+            </form>
+        </td>
     </tr>
-    </table>
-</form>
+
+</table>
+
 
 </body>
 </html>

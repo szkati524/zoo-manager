@@ -1,7 +1,9 @@
 package com.zooManager.zooManager.service;
 
+import com.zooManager.zooManager.Animal;
 import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.EmployeeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,5 +21,15 @@ public class EmployeeService {
     }
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
+    }
+@Transactional
+    public void deleteEmployeeById(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Employee not found"));
+        for (Animal aml : employee.getAnimals()){
+            aml.getEmployees().remove(employee);
+        }
+        employee.getAnimals().clear();
+        employeeRepository.deleteById(id);
     }
 }

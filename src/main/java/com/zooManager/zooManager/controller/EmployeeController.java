@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,7 +36,7 @@ public class EmployeeController {
     return "add-employee";
     }
     @PostMapping("add-employee")
-    public String addEmployee(@ModelAttribute Employee employee, @RequestParam List<Long> animalsIds, Model model){
+    public String addEmployee(@ModelAttribute Employee employee, Model model){
     try{
         if (employee.getAnimalIds() != null && !employee.getAnimalIds().isEmpty()) {
             List<Animal> selectedAnimal = animalService.findAllByIds(employee.getAnimalIds());
@@ -56,6 +53,11 @@ public class EmployeeController {
     model.addAttribute("allAnimals",animalService.getAllAnimals());
     return "add-employee";
 
+    }
+    @PostMapping("employee/delete/{id}")
+    public String deleteEmployeeById(@PathVariable Long id){
+    employeeService.deleteEmployeeById(id);
+    return "redirect:/employee";
     }
 
 }

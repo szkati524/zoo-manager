@@ -7,7 +7,6 @@
 </head>
 <body>
 <h1>Nasi pracownicy:</h1>
-<form th:action="@{/employee}" method="get" th:object="${employee}">
     <table>
         <tr>
             <th>Imię:</th>
@@ -15,14 +14,24 @@
             <th>Email:</th>
             <th>Zawód:</th>
         </tr>
+
         <tr th:each="employee : ${employees}">
             <td th:text="${employee.name}"></td>
             <td th:text="${employee.surname}"></td>
             <td th:text="${employee.email}"></td>
             <td th:text="${employee.profession}"></td>
+            <td>
+
+                <form th:action="@{employee/delete/{id}(id=${employee.id})}" method="post">
+                    <button type="submit"
+                            onclick="return confirm('czy napewno chcesz usunąć pracownika?');">
+                        Usuń
+                    </button>
+                </form>
+            </td>
         </tr>
     </table>
-</form>
+
 
 </body>
 </html>

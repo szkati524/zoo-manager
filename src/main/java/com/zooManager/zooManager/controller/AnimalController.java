@@ -73,6 +73,12 @@ public class AnimalController {
             model.addAttribute("employeeSurname", employeeSurname);
             return "animals";
         }
+        @PostMapping("/animals/delete/{id}")
+    public String deleteAnimalsById(@PathVariable Long id){
+        animalService.deleteAnimalById(id);
+        return "redirect:/animals";
+
+        }
     }
 
 

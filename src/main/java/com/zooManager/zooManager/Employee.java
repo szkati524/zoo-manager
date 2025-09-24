@@ -19,17 +19,21 @@ public class Employee {
 @ManyToMany(mappedBy = "employees")
   private List<Animal> animals = new ArrayList<>();
 
+@OneToMany(mappedBy = "employee")
+private List<Document> documents = new ArrayList<>();
+
 
     public Employee(){
 
     }
 
-    public Employee(String name, String surname, String email, String profession, List<Animal> animals) {
+    public Employee(String name, String surname, String email, String profession, List<Animal> animals,List<Document> documents) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.profession = profession;
         this.animals = animals;
+        this.documents = documents;
     }
 
     public Long getId() {
@@ -86,6 +90,12 @@ public class Employee {
 
     public void setAnimalIds(List<Long> animalIds) {
         this.animalIds = animalIds;
+    }
+    public List<Document> getDocuments() {
+        return documents;
+    }
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
     }
 
     @Override
