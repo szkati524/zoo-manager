@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddDocument</title>
+</head>
+<body>
+<h1>Dodaj Dokument:</h1>
+<form th:action="@{/add-document}" method="post" th:object="${document}">
+    <label for="title">tytuł:</label>
+    <input type="text" id="title" th:field="*{title}" required>
+    <label for="content">Treść dokumentu</label>
+    <textarea id="content"
+              name="content"
+              rows="6"
+              cols="60"
+              placeholder="wpisz treść dokumentu"
+              th:field="*{content}"></textarea>
+    <label for="documentCategory">Kategoria:</label>
+    <select id="documentCategory"
+            th:field="*{documentCategory}">
+        <option value="">-- Wybierz kategorię --</option>
+        <option th:each="c : ${T(com.zooManager.zooManager.DocumentCategory).values()}"
+                th:value="${c}"
+                th:text="${c}"></option>
+    </select>
+    <button type="submit">Dodaj Dokument</button>
+</form>
+<div th:if="${success}" style="color:green;">
+    Dokument dodany!!!
+</div>
+<div th:if="${error}" style="color:red;">
+    Dodanie dokumentu nie powiodło się
+</div>
+
+<a th:href="@{/documents}">Zobacz inne dokumenty</a>
+
+</body>
+</html>

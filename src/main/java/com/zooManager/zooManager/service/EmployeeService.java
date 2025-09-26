@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -31,5 +32,8 @@ public class EmployeeService {
         }
         employee.getAnimals().clear();
         employeeRepository.deleteById(id);
+    }
+    public Optional<Employee> findById(Long id){
+        return employeeRepository.findById(id);
     }
 }

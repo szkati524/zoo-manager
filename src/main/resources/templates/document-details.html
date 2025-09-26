@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${document.title}">Szczegóły dokumentu</title>
+
+
+</head>
+<body>
+<h1 th:text="${document.title}">Tytuł dokumentu</h1>
+<p><strong>Dodany:</strong><span th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></span> </p>
+<p><strong>Treść:</strong></p>
+<div th:text="${document.content}"></div>
+<a th:href="@{/documents}">-Powrót do listy-</a>
+
+</body>
+</html>

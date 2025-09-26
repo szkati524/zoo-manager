@@ -16,9 +16,37 @@
     <option value="">Wszystkie:</option>
     <option th:each="c : ${T(com.zooManager.zooManager.DocumentCategory).values()}"
             th:value="${c}"
-            th:text="${c}"></option>
+            th:text="${c}">
+    </option>
     </select>
     <button type="submit">Szukaj</button>
+
+    <h1>Dokumenty:</h1>
 </form>
+    <table>
+        <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Data utworzenia</th>
+            <th>Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="document : ${documents}">
+            <td th:text="${document.title}"></td>
+            <td th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td>
+
+                <a th:href="@{/documents/{id}(id=${document.id})}">Zobacz</a>
+
+                <form th:action="@{/documents/delete/{id}(id=${document.id})}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Czy na pewno chcesz usunąć dokument?');">
+                        Usuń
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </body>
 </html>
