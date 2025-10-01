@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +8,14 @@
 </head>
 
 <body>
+<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
 <nav class="fixed-menu">
     <ul>
-        <li><a href="#">Strona główna</a></li>
-        <li><a href="#">Zwierzęta</a></li>
-        <li><a href="#">Pracownicy</a></li>
-        <li><a href="#">Dokumenty</a></li>
-        <li><a href="#">Zadania</a></li>
+        <li><a th:href="@{/main}">Strona główna</a></li>
+        <li><a th:href="@{/animals}">Zwierzęta</a></li>
+        <li><a th:href="@{/employee}">Pracownicy</a></li>
+        <li><a th:href="@{/documents}">Dokumenty</a></li>
+        <li><a th:href="@{/tasks}">Zadania</a></li>
         <li><a href="#">Ustawienia</a></li>
         <li><a href="#">Wyloguj się</a></li>
     </ul>

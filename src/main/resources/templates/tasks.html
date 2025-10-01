@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+</head>
+<body>
+<h1>Zadania</h1>
+<tr>
+    <th>Tytuł</th>
+    <th>Opis</th>
+    <th>Przypisany do</th>
+    <th>Status</th>
+    <th>Akcje</th>
+</tr>
+<tr th:each="task : ${tasks}">
+    <td th:text="${task.title}"></td>
+    <td th:text="${task.description}"></td>
+    <td th:text="${task.assignedTo.name + ' ' + task.assignedTo.surname}"></td>
+    <td th:text="${task.completed ? 'Wykonany' : 'Nie wykonany'}"></td>
+    <td>
+        <form th:action="@{/tasks/complete/{id}(id=${task.id})}" method="post" th:if="${!task.completed}">
+            <button type="submit">Oznacz jako wykonany</button>
+        </form>
+        <form th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post">
+            <button type="submit">Usuń</button>
+        </form>
+    </td>
+
+</tr>
+<h2>Dodaj nowe zadanie</h2>
+<form th:action="@{/tasks/add}" method="post">
+    <label>Tytuł:</label>
+    <input type="text" name="title" required><br>
+    <label>Opis:</label>
+    <textarea name="description"></textarea><br>
+
+    <label>Przypisz do pracownika</label>
+    <select name="employeeId" required>
+        <option th:each="emp : ${employees}"
+                th:value="${emp.id}"
+                th:text="${emp.name + ' ' + emp.surname}">
+
+        </option>
+    </select><br>
+    <button type="submit">Dodaj zadanie</button>
+</form>
+</body>
+</html>

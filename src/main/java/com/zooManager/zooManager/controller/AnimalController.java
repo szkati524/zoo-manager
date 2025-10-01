@@ -1,24 +1,27 @@
 package com.zooManager.zooManager.controller;
 
 import com.zooManager.zooManager.Animal;
+import com.zooManager.zooManager.repository.EmployeeRepository;
 import com.zooManager.zooManager.service.AnimalService;
+import com.zooManager.zooManager.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class AnimalController {
 
     private final AnimalService animalService;
-
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
     @Autowired
-    public AnimalController(AnimalService animalService) {
+    public AnimalController(AnimalService animalService, EmployeeRepository employeeRepository, EmployeeService employeeService) {
         this.animalService = animalService;
+        this.employeeRepository = employeeRepository;
+        this.employeeService = employeeService;
     }
 
     @GetMapping("/add-animal")
@@ -71,6 +74,7 @@ public class AnimalController {
             model.addAttribute("currentVaccination", currentVaccination);
             model.addAttribute("employeeName", employeeName);
             model.addAttribute("employeeSurname", employeeSurname);
+            model.addAttribute("allEmployees",employeeService.getAllEmployees());
             return "animals";
         }
         @PostMapping("/animals/delete/{id}")
@@ -78,6 +82,16 @@ public class AnimalController {
         animalService.deleteAnimalById(id);
         return "redirect:/animals";
 
+        }
+        @PostMapping("/animals/vaccination/{id}")
+    public String setVaccinationAnimal(@PathVariable Long id,@RequestParam boolean status){
+        animalService.toggleVaccination(id,status);
+        return "redirect:/animals";
+        }
+        @PostMapping("/animals/assign/{animalId}")
+    public String assignEmployeeToAnimal(@PathVariable Long animalId,@RequestParam Long employeeId){
+        animalService.assignEmployeeToAnimal(animalId,employeeId,employeeRepository);
+        return "redirect:/animals";
         }
     }
 

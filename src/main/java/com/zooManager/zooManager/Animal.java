@@ -10,7 +10,7 @@ public class Animal {
     private Long id;
     private String name;
     private String species;
-    private Boolean currentVaccination;
+    private boolean currentVaccination;
 @ManyToMany
   private List<Employee> employees = new ArrayList<>();
 

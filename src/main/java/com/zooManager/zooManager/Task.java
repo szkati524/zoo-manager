@@ -30,6 +30,10 @@ public class Task {
         this.completed = false;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -6,9 +6,7 @@ import com.zooManager.zooManager.service.EmployeeService;
 import com.zooManager.zooManager.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,10 +32,11 @@ public class TaskController {
             tasks = taskService.getAllTasks();
         }
         model.addAttribute("tasks",tasks);
+        model.addAttribute("employees",employeeService.getAllEmployees());
         return "tasks";
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public String addTask(@RequestParam String title,
                           @RequestParam String description,
                           @RequestParam Long employeeId) {
@@ -45,6 +44,16 @@ public class TaskController {
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         Task task = new Task(title,description,emp);
         taskService.addTask(task);
+        return "redirect:/tasks";
+    }
+    @PostMapping("/complete/{id}")
+    public String completeTask(@PathVariable Long id){
+        taskService.markAsCompleted(id);
+        return "redirect:/tasks";
+    }
+    @PostMapping("/delete/{id}")
+    public String deleteTask(@PathVariable Long id){
+        taskService.deleteTask(id);
         return "redirect:/tasks";
     }
 

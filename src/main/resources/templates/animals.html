@@ -19,12 +19,17 @@
     <input type="text" name="employeeSurname" placeholder="Nazwisko pracownika" th:value="${employeeSurname}">
     <button type="submit">Szukaj</button>
 </form>
+<h1>Twoje zwierzęta:</h1>
 <h1>Nasze zwierzęta:</h1>
 <table>
 
     <tr th:each="animal : ${animals}">
         <td th:text="${animal.name}"></td>
         <td th:text="${animal.species}"></td>
+        <td th:text="${animal.currentVaccination} ? 'Zaszczepione' : 'Nie zaszczepione'"></td>
+        <td>
+            <span th:each="emp : ${animal.employees}" th:text="${emp.name + ' ' + emp.surname} + ', '"></span>
+        </td>
         <td>
             <form th:action="@{/animals/delete/{id}(id=${animal.id})}" method="post">
                 <button type="submit"
@@ -32,6 +37,27 @@
                     Usuń
                 </button>
 
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/animals/vaccination/{id}(id=${animal.id})}" method="post">
+                <input type="hidden" name="status" th:value="${!animal.currentVaccination}"/>
+                <button type="submit"
+                        th:text="${animal.currentVaccination} ? 'Nie zaszczepiony' : 'Zaszczep'">
+
+                </button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/animals/assign/{animalId}(animalId=${animal.id})}" method="post">
+                <select name="employeeId" required>
+                    <option th:each="emp : ${allEmployees}"
+                            th:value="${emp.id}"
+                            th:text="${emp.name + ' ' + emp.surname}">
+
+                    </option>
+                </select>
+                <button type="submit">Przypisz</button>
             </form>
         </td>
     </tr>

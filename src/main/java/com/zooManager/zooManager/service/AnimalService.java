@@ -3,6 +3,7 @@ package com.zooManager.zooManager.service;
 import com.zooManager.zooManager.Animal;
 import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.AnimalRepository;
+import com.zooManager.zooManager.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,5 +45,24 @@ public List<Animal> searchAnimal(String name,String species,Boolean currentVacci
         }
         animal.getEmployees().clear();
        animalRepository.deleteById(id);
+    }
+    @Transactional
+    public void toggleVaccination(Long id,boolean status){
+        Animal animal = animalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Animal not found"));
+        animal.setCurrentVaccination(status);
+        animalRepository.save(animal);
+    }
+    @Transactional
+    public void assignEmployeeToAnimal(Long animalId, long employeeId, EmployeeRepository employeeRepository) {
+        Animal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new RuntimeException("Animal not found"));
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        if (!animal.getEmployees().contains(employee)){
+            animal.getEmployees().add(employee);
+            employee.getAnimals().add(animal);
+        }
+        animalRepository.save(animal);
     }
 }
