@@ -14,6 +14,7 @@ public class Employee {
     private String email;
 
     private String profession;
+    private String imagePath;
     @Transient
     private List<Long> animalIds = new ArrayList<>();
 @ManyToMany(mappedBy = "employees")
@@ -27,13 +28,14 @@ private List<Document> documents = new ArrayList<>();
 
     }
 
-    public Employee(String name, String surname, String email, String profession, List<Animal> animals,List<Document> documents) {
+    public Employee(String name, String surname, String email, String profession, List<Animal> animals,List<Document> documents,String imagePath) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.profession = profession;
         this.animals = animals;
         this.documents = documents;
+        this.imagePath = imagePath;
     }
 
     public Long getId() {
@@ -96,6 +98,14 @@ private List<Document> documents = new ArrayList<>();
     }
     public void setDocuments(List<Document> documents) {
         this.documents = documents;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override

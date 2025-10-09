@@ -7,11 +7,13 @@
 </head>
 <body>
 <h1>Dodaj zwierzę:</h1>
-<form th:action="@{/add-animal}" method="post" th:object="${animal}">
+<form th:action="@{/add-animal}" method="post" th:object="${animal}" enctype="multipart/form-data">
 <label for="name">Imię zwierzęcia:</label>
 <input type="text" id="name" th:field="*{name}" required>
 <label for="species">Gatunek:</label>
 <input type="text" id="species" th:field="*{species}" required>
+    <label>Zdjęcie:</label>
+    <input type="file" name="image"><br>
     <button type="submit">Dodaj zwierzę</button>
 </form>
 <div th:if="${success}" style="color:green;">

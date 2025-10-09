@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Dodaj Pracownika:</h1>
-<form th:action="@{/add-employee}" method="post" th:object="${employee}">
+<form th:action="@{/add-employee}" method="post" th:object="${employee}" enctype="multipart/form-data">
     <label for="name">Imię Pracownika:</label>
     <input type="text" id="name" th:field="*{name}" required>
     <label for="surname">Nazwisko:</label>
@@ -16,6 +16,8 @@
     <input type="email" id="email" th:field="*{email}" required>
     <label for="profession">Zawód:</label>
     <input type="text" id="profession" th:field="*{profession}" required>
+    <label>Zdjęcie:</label>
+    <input type="file" name="image">
     <label for="animals">Przypisz zwierzęta(opcjonalnie):</label>
     <select id="animals" th:field="*{animalIds}" multiple>
         <option th:each="animal : ${allAnimals}"

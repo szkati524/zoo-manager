@@ -11,6 +11,7 @@ public class Animal {
     private String name;
     private String species;
     private boolean currentVaccination;
+    private String imagePath;
 @ManyToMany
   private List<Employee> employees = new ArrayList<>();
 
@@ -20,11 +21,12 @@ public class Animal {
 
   }
 
-    public Animal(String name, String species, Boolean currentVaccination, List<Employee> employees) {
+    public Animal(String name, String species, Boolean currentVaccination, List<Employee> employees,String imagePath) {
         this.name = name;
         this.species = species;
         this.currentVaccination = currentVaccination;
         this.employees = employees;
+        this.imagePath = imagePath;
     }
 
     public Long getId() {
@@ -67,6 +69,13 @@ public class Animal {
         this.employees = employees;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     @Override
     public String toString() {

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnimalService {
@@ -36,6 +37,10 @@ public List<Animal> searchAnimal(String name,String species,Boolean currentVacci
     public List<Animal> findAllByIds(List<Long> Ids) {
         return animalRepository.findAllById(Ids);
     }
+        public Optional<Animal> findById(Long id){
+           return animalRepository.findById(id);
+        }
+
     @Transactional
     public void deleteAnimalById(Long id){
         Animal animal = animalRepository.findById(id)
@@ -65,4 +70,5 @@ public List<Animal> searchAnimal(String name,String species,Boolean currentVacci
         }
         animalRepository.save(animal);
     }
+
 }

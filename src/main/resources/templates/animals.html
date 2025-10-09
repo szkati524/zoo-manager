@@ -24,6 +24,9 @@
 <table>
 
     <tr th:each="animal : ${animals}">
+        <td>
+            <a th:href="@{/animals/{id}(id=${animal.id})}" th:text="${animal.name}">Wejdź na profil</a>
+        </td>
         <td th:text="${animal.name}"></td>
         <td th:text="${animal.species}"></td>
         <td th:text="${animal.currentVaccination} ? 'Zaszczepione' : 'Nie zaszczepione'"></td>

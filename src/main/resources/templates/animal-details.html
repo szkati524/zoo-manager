@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+    <title th:text="${animal.name} + ' - Profil zwierzęcia'">Profil zwierzęcia</title>
+</head>
+<body>
+<img th:if="${animal.imagePath != null}"
+     th:src="@{/uploads/{image}(image=${animal.imagePath})}"
+     alt="Zdjęcie zwierzęcia" width="200"/>
+<h1 th:text="${animal.name}"></h1>
+<p><strong>Gatunek:</strong><span th:text="${animal.species}"></span></p>
+<p><strong>Status szczepienia:</strong>
+    <span th:text="${animal.currentVaccination ? 'Zaszczepiony' : 'Nie zaszczepiony'}"></span>
+</p>
+<p><strong>Pracownicy odpowiedzialni:</strong></p>
+<ul>
+    <li th:each="emp : ${animal.employees}"
+        th:text="${emp.name} + ' ' + ${emp.surname}"></li>
+</ul>
+<br><br>
+<a th:href="@{/animals}"><- Powrót do listy zwierząt</a>
+</body>
+</html>

@@ -9,8 +9,13 @@ import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class EmployeeController {
@@ -36,13 +41,30 @@ public class EmployeeController {
     return "add-employee";
     }
     @PostMapping("add-employee")
-    public String addEmployee(@ModelAttribute Employee employee, Model model){
+    public String addEmployee(@ModelAttribute Employee employee, @RequestParam("image") MultipartFile image, Model model){
     try{
+        if (!image.isEmpty()) {
+
+
+            Path uploadPath = Paths.get(System.getProperty("user.dir"),"uploads");
+            if (!Files.exists(uploadPath)){
+                Files.createDirectories(uploadPath);
+            }
+            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            image.transferTo(filePath.toFile());
+            employee.setImagePath(fileName);
+
+    }
+
         if (employee.getAnimalIds() != null && !employee.getAnimalIds().isEmpty()) {
             List<Animal> selectedAnimal = animalService.findAllByIds(employee.getAnimalIds());
             employee.setAnimals(selectedAnimal);
-
+for (Animal animal : selectedAnimal){
+    animal.getEmployees().add(employee);
+}
         }
+
         employeeService.addEmployee(employee);
         model.addAttribute("success",true);
     } catch (Exception e){
