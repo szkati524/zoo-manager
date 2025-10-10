@@ -4,20 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasks</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+<nav class="fixed-menu">
+    <ul>
+        <li><a th:href="@{/main}">Strona główna</a></li>
+        <li><a th:href="@{/animals}">Zwierzęta</a></li>
+        <li><a th:href="@{/employee}">Pracownicy</a></li>
+        <li><a th:href="@{/documents}">Dokumenty</a></li>
+        <li><a th:href="@{/tasks}">Zadania</a></li>
+        <li><a href="#">Ustawienia</a></li>
+        <li><a href="#">Wyloguj się</a></li>
+    </ul>
+</nav>
 <h1>Zadania</h1>
+<table>
+    <thead>
 <tr>
     <th>Tytuł</th>
     <th>Opis</th>
     <th>Przypisany do</th>
     <th>Status</th>
-    <th>Akcje</th>
+    <th colspan="3">Akcje</th>
 </tr>
+    </thead>
 <tr th:each="task : ${tasks}">
     <td th:text="${task.title}"></td>
     <td th:text="${task.description}"></td>
-    <td th:text="${task.assignedTo.name + ' ' + task.assignedTo.surname}"></td>
+    <td>
+        <a th:href="@{/employee/{employeeId}(employeeId=${task.assignedTo.id})}"
+           th:text="${task.assignedTo.name + ' ' + task.assignedTo.surname}">
+        </a>
+    </td>
     <td th:text="${task.completed ? 'Wykonany' : 'Nie wykonany'}"></td>
     <td>
         <form th:action="@{/tasks/complete/{id}(id=${task.id})}" method="post" th:if="${!task.completed}">
@@ -46,5 +66,6 @@
     </select><br>
     <button type="submit">Dodaj zadanie</button>
 </form>
+</table>
 </body>
 </html>

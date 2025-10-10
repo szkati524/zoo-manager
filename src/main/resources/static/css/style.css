@@ -17,7 +17,6 @@ body {
     background-color: black;
     color:white;
     z-index:1000;
-    background-image: url('../img/logo.jpg');
     background-repeat: no-repeat;
     background-position: 20px center;
     background-size: 50px auto;
@@ -43,4 +42,60 @@ body {
 .fixed-menu a:hover{
     background-color: rgba(255, 255, 255, 0.1);
     color:beige;
+}
+.photo-profile{
+width:50px;
+height:50px;
+}
+table {
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+background-color:pink;
+box-shadow:0 4px 12px rgba(0,0,0,0.15);
+border-radius:10px;
+overflow:hidden;
+}
+th,td{
+border:1px solid #d1d5db;
+padding:12px 15px;
+text-align: left;
+}
+th {
+background-color:#3b82f6;
+color:white;
+text-transform:uppercase;
+letter-spacing:0.05em;
+}
+tr:nth-child(even){
+background-color:#f3f4f6;
+}
+tr:hover{
+background-color:#e0f2fe;
+transition:background-color 0.25s ease;
+}
+button{
+background-color:#3b82f6;
+color:white;
+border:none;
+border-radius:6px;
+padding:6px 12px;
+cursor:pointer;
+transition:background-color 0.2s ease;
+}
+button:hover{
+background-color:#2563eb;
+}
+.add-button{
+background-color:#3b82f6;
+color:white;
+border:none;
+border-radius:6px;
+padding:6px 12px;
+cursor:pointer;
+transition:background-color 0.2s ease;
+text-decoration:none;
+}
+.add-button:hover{
+background-color:#2563eb;
 }

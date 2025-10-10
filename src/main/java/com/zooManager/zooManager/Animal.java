@@ -28,6 +28,13 @@ public class Animal {
         this.employees = employees;
         this.imagePath = imagePath;
     }
+    public Animal(Long id,String name,String species,boolean currentVaccination){
+      this.id = id;
+      this.name = name;
+      this.species = species;
+      this.currentVaccination = currentVaccination;
+      this.employees = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;

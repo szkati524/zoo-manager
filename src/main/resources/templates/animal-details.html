@@ -3,20 +3,36 @@
 <head>
 <meta charset="UTF-8">
     <title th:text="${animal.name} + ' - Profil zwierzęcia'">Profil zwierzęcia</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+<nav class="fixed-menu">
+    <ul>
+        <li><a th:href="@{/main}">Strona główna</a></li>
+        <li><a th:href="@{/animals}">Zwierzęta</a></li>
+        <li><a th:href="@{/employee}">Pracownicy</a></li>
+        <li><a th:href="@{/documents}">Dokumenty</a></li>
+        <li><a th:href="@{/tasks}">Zadania</a></li>
+        <li><a href="#">Ustawienia</a></li>
+        <li><a href="#">Wyloguj się</a></li>
+    </ul>
+</nav>
 <img th:if="${animal.imagePath != null}"
      th:src="@{/uploads/{image}(image=${animal.imagePath})}"
      alt="Zdjęcie zwierzęcia" width="200"/>
-<h1 th:text="${animal.name}"></h1>
+<p><strong>Imię:</strong><span th:text="${animal.name}"></span></p>
 <p><strong>Gatunek:</strong><span th:text="${animal.species}"></span></p>
 <p><strong>Status szczepienia:</strong>
     <span th:text="${animal.currentVaccination ? 'Zaszczepiony' : 'Nie zaszczepiony'}"></span>
 </p>
 <p><strong>Pracownicy odpowiedzialni:</strong></p>
 <ul>
-    <li th:each="emp : ${animal.employees}"
-        th:text="${emp.name} + ' ' + ${emp.surname}"></li>
+    <li th:each="emp : ${animal.employees}">
+    <a th:href="@{/employee/{employeeId}(employeeId=${emp.id})}"
+       th:text="${emp.name} + ' ' + ${emp.surname}">
+    </a>
+    </li>
 </ul>
 <br><br>
 <a th:href="@{/animals}"><- Powrót do listy zwierząt</a>

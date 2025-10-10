@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${employee.name} + ' - Profil pracownika'">Profil pracownika</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+<nav class="fixed-menu">
+    <ul>
+        <li><a th:href="@{/main}">Strona główna</a></li>
+        <li><a th:href="@{/animals}">Zwierzęta</a></li>
+        <li><a th:href="@{/employee}">Pracownicy</a></li>
+        <li><a th:href="@{/documents}">Dokumenty</a></li>
+        <li><a th:href="@{/tasks}">Zadania</a></li>
+        <li><a href="#">Ustawienia</a></li>
+        <li><a href="#">Wyloguj się</a></li>
+    </ul>
+</nav>
+<img th:if="${employee.imagePath != null}"
+     th:src="@{/uploads/{image}(image=${employee.imagePath})}"
+     alt="Zdjęcie pracownika" width="200"/>
+<p><strong>Imię:</strong><span th:text="${employee.name}"></span></p>
+<p><strong>Nazwisko:</strong><span th:text="${employee.surname}"></span></p>
+<p><strong>Zawód:</strong><span th:text="${employee.profession}"></span></p>
+<p><strong>Opiekuje się:</strong></p>
+<ul>
+    <li th:each="ani : ${employee.animals}">
+    <a th:href="@{/animals/{animalId}(animalId=${ani.id})}"
+       th:text="${ani.name} + ' ' + ${ani.species}">
+    </a>
+      </li>
+</ul>
+<br><br>
+<a th:href="@{/employee}"><- Powrót do listy pracowników</a>
+</body>
+</html>

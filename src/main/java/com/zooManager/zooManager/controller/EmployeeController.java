@@ -81,5 +81,12 @@ for (Animal animal : selectedAnimal){
     employeeService.deleteEmployeeById(id);
     return "redirect:/employee";
     }
+    @GetMapping("/employee/{id}")
+    public String viewEmployee(@PathVariable Long id,Model model){
+    Employee employee = employeeService.findById(id)
+            .orElseThrow(() -> new RuntimeException("Employee not found"));
+    model.addAttribute("employee",employee);
+    return "employee-details";
+    }
 
 }

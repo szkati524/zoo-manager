@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZooAnimal</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+<nav class="fixed-menu">
+    <ul>
+        <li><a th:href="@{/main}">Strona główna</a></li>
+        <li><a th:href="@{/animals}">Zwierzęta</a></li>
+        <li><a th:href="@{/employee}">Pracownicy</a></li>
+        <li><a th:href="@{/documents}">Dokumenty</a></li>
+        <li><a th:href="@{/tasks}">Zadania</a></li>
+        <li><a href="#">Ustawienia</a></li>
+        <li><a href="#">Wyloguj się</a></li>
+    </ul>
+</nav>
 <h1>Wyszukaj:</h1>
 <form th:action="@{/animals}" method="get">
     <input type="text" name="name" placeholder="Imię zwierzęcia" th:value="${name}">
@@ -22,18 +35,44 @@
 <h1>Twoje zwierzęta:</h1>
 <h1>Nasze zwierzęta:</h1>
 <table>
+    <thead>
+    <tr>
+        <th>Zdjęcie</th>
+        <th>Imię</th>
+        <th>Gatunek</th>
+        <th>Szczepienie</th>
+        <th>Opiekunowie</th>
+        <th colspan="3">Akcje</th>
+    </tr>
+    </thead>
 
     <tr th:each="animal : ${animals}">
         <td>
-            <a th:href="@{/animals/{id}(id=${animal.id})}" th:text="${animal.name}">Wejdź na profil</a>
+            <a th:href="@{/animals/{id}(id=${animal.id})}">
+                <img class="photo-profile" th:if="${animal.imagePath != null}"
+                     th:src="@{/uploads/{img}(img=${animal.imagePath})}"
+                     alt="Zdjęcie">
+                     <img class="photo-profile"  th:if="${animal.imagePath == null}"
+                          src="/images/default-animal.png"
+                          alt="brak zdjęcia">
+            </a>
         </td>
         <td th:text="${animal.name}"></td>
         <td th:text="${animal.species}"></td>
         <td th:text="${animal.currentVaccination} ? 'Zaszczepione' : 'Nie zaszczepione'"></td>
         <td>
-            <span th:each="emp : ${animal.employees}" th:text="${emp.name + ' ' + emp.surname} + ', '"></span>
+              <span th:each="emp : ${animal.employees}">
+
+        <a th:href="@{/employee/{employeeId}(employeeId=${emp.id})}"
+           th:text="${emp.name + ' ' + emp.surname}">
+        </a>
+
+        <span>, </span>
+
+    </span>
         </td>
-        <td>
+
+            <td>
             <form th:action="@{/animals/delete/{id}(id=${animal.id})}" method="post">
                 <button type="submit"
                         onclick="return confirm('czy napewno chcesz usunąć zwierzę?');">
@@ -63,10 +102,13 @@
                 <button type="submit">Przypisz</button>
             </form>
         </td>
+
     </tr>
 
 </table>
 
+<br><br>
+<a class="add-button" th:href="@{/add-animal}">Dodaj zwierzę</a>
 
 </body>
 </html>

@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZooAnimal</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+<nav class="fixed-menu">
+    <ul>
+        <li><a th:href="@{/main}">Strona główna</a></li>
+        <li><a th:href="@{/animals}">Zwierzęta</a></li>
+        <li><a th:href="@{/employee}">Pracownicy</a></li>
+        <li><a th:href="@{/documents}">Dokumenty</a></li>
+        <li><a th:href="@{/tasks}">Zadania</a></li>
+        <li><a href="#">Ustawienia</a></li>
+        <li><a href="#">Wyloguj się</a></li>
+    </ul>
+</nav>
 <h1>Dodaj Pracownika:</h1>
 <form th:action="@{/add-employee}" method="post" th:object="${employee}" enctype="multipart/form-data">
     <label for="name">Imię Pracownika:</label>
@@ -32,7 +45,7 @@
 <div th:if="${error}" style="color:red;">
     Wystąpił błąd
 </div>
-
+<a th:href="@{/employee}">Zobacz naszych pracowników</a>
 
 
 </body>

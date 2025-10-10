@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documents</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+<nav class="fixed-menu">
+    <ul>
+        <li><a th:href="@{/main}">Strona główna</a></li>
+        <li><a th:href="@{/animals}">Zwierzęta</a></li>
+        <li><a th:href="@{/employee}">Pracownicy</a></li>
+        <li><a th:href="@{/documents}">Dokumenty</a></li>
+        <li><a th:href="@{/tasks}">Zadania</a></li>
+        <li><a href="#">Ustawienia</a></li>
+        <li><a href="#">Wyloguj się</a></li>
+    </ul>
+</nav>
 <h1>Wyszukaj:</h1>
 <form th:action="@{/documents}" method="get">
     <input type="text" name="title" placeholder="Tytuł dokumentu" >
@@ -48,5 +61,7 @@
         </tr>
         </tbody>
     </table>
+<br><br>
+<a class="add-button" th:href="@{/add-document}">Dodaj Dokument</a>
 </body>
 </html>
