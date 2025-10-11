@@ -4,9 +4,11 @@ import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.Task;
 import com.zooManager.zooManager.service.EmployeeService;
 import com.zooManager.zooManager.service.TaskService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class TaskController {
         List<Task> tasks;
         if (employeeId != null){
             Employee emp = employeeService.findById(employeeId)
-                    .orElseThrow(() -> new RuntimeException("Employee not found"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Employee not found"));
             tasks = taskService.getTasksForEmployee(emp);
         } else {
             tasks = taskService.getAllTasks();

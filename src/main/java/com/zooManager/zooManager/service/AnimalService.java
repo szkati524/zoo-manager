@@ -5,20 +5,25 @@ import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.AnimalRepository;
 import com.zooManager.zooManager.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AnimalService {
 
     private final AnimalRepository animalRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public AnimalService(AnimalRepository animalRepository) {
+    public AnimalService(AnimalRepository animalRepository, EmployeeRepository employeeRepository) {
         this.animalRepository = animalRepository;
+        this.employeeRepository = employeeRepository;
     }
 
 
@@ -27,6 +32,23 @@ public class AnimalService {
             throw new IllegalArgumentException("Animal cannot be null");
         }
    return animalRepository.save(animal);
+    }
+    public Animal addAnimalWithImage(Animal animal, MultipartFile image) throws Exception{
+        if (animal == null){
+            throw new IllegalArgumentException("Animal cannot be null");
+        }
+        if (image != null && !image.isEmpty()){
+            Path projectDir = Paths.get(System.getProperty("user.dir"));
+            Path uploadPath = projectDir.resolve("uploads");
+            if (!Files.exists(uploadPath)){
+                Files.createDirectories(uploadPath);
+            }
+            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            image.transferTo(filePath.toFile());
+            animal.setImagePath(fileName);
+        }
+        return animalRepository.save(animal);
     }
 
     public List<Animal> getAllAnimals(){
@@ -62,7 +84,7 @@ public List<Animal> searchAnimal(String name,String species,Boolean currentVacci
         animalRepository.save(animal);
     }
     @Transactional
-    public void assignEmployeeToAnimal(Long animalId, long employeeId, EmployeeRepository employeeRepository) {
+    public void assignEmployeeToAnimal(Long animalId, long employeeId) {
         Animal animal = animalRepository.findById(animalId)
                 .orElseThrow(() -> new RuntimeException("Animal not found"));
         Employee employee = employeeRepository.findById(employeeId)

@@ -21,7 +21,7 @@ public class Animal {
 
   }
 
-    public Animal(String name, String species, Boolean currentVaccination, List<Employee> employees,String imagePath) {
+    public Animal(String name, String species, boolean currentVaccination, List<Employee> employees,String imagePath) {
         this.name = name;
         this.species = species;
         this.currentVaccination = currentVaccination;
@@ -60,11 +60,11 @@ public class Animal {
         this.species = species;
     }
 
-    public Boolean getCurrentVaccination() {
+    public boolean getCurrentVaccination() {
         return currentVaccination;
     }
 
-    public void setCurrentVaccination(Boolean currentVaccination) {
+    public void setCurrentVaccination(boolean currentVaccination) {
         this.currentVaccination = currentVaccination;
     }
 
@@ -91,8 +91,20 @@ public class Animal {
                 ", name='" + name + '\'' +
                 ", species='" + species + '\'' +
                 ", currentVaccination=" + currentVaccination +
-                ", employees=" + employees +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Animal animal = (Animal) o;
+        return Objects.equals(id, animal.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 

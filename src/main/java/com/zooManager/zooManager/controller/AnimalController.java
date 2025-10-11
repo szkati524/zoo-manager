@@ -4,11 +4,15 @@ import com.zooManager.zooManager.Animal;
 import com.zooManager.zooManager.repository.EmployeeRepository;
 import com.zooManager.zooManager.service.AnimalService;
 import com.zooManager.zooManager.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,14 +23,15 @@ import java.util.UUID;
 
 @Controller
 public class AnimalController {
+    private final static Logger log = LoggerFactory.getLogger(AnimalController.class);
 
     private final AnimalService animalService;
-    private final EmployeeRepository employeeRepository;
+
     private final EmployeeService employeeService;
     @Autowired
-    public AnimalController(AnimalService animalService, EmployeeRepository employeeRepository, EmployeeService employeeService) {
+    public AnimalController(AnimalService animalService, EmployeeService employeeService) {
         this.animalService = animalService;
-        this.employeeRepository = employeeRepository;
+
         this.employeeService = employeeService;
     }
 
@@ -39,22 +44,12 @@ public class AnimalController {
     @PostMapping("/add-animal")
     public String addAnimal(@ModelAttribute Animal animal, @RequestParam("image") MultipartFile image, Model model) {
         try{
-            if (!image.isEmpty()) {
-                Path projectDir = Paths.get(System.getProperty("user.dir"));
-                Path uploadPath = projectDir.resolve("uploads");
-                if (!Files.exists(uploadPath)){
-                    Files.createDirectories(uploadPath);
-                }
-                String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-                Path filePath = uploadPath.resolve(fileName);
-                image.transferTo(filePath.toFile());
-                animal.setImagePath(fileName);
-            }
-            animalService.addAnimal(animal);
+
+            animalService.addAnimalWithImage(animal,image);
             model.addAttribute("success", true);
         } catch (Exception e) {
-            model.addAttribute("error", false);
-            e.printStackTrace();
+            model.addAttribute("error", true);
+            log.error("Błąd podczas dodawnia zwierzęcia",e);
         }
 
         model.addAttribute("animal", new Animal());
@@ -70,20 +65,21 @@ public class AnimalController {
                                 @RequestParam(required = false) String employeeName,
                                 @RequestParam(required = false) String employeeSurname) {
         List<Animal> animals;
-        boolean isFilterEmpty = (name == null || name.isBlank() &&
-                species == null || species.isBlank() &&
+        boolean isFilterEmpty = isBlank(name) &&
+                isBlank(species) &&
                 currentVaccination == null &&
-                employeeName == null || employeeName.isBlank() &&
-                employeeSurname == null || employeeSurname.isBlank());
+                isBlank(employeeName) &&
+                isBlank(employeeSurname);
         if (isFilterEmpty) {
             animals = animalService.getAllAnimals();
         } else {
+
             animals = animalService.searchAnimal(
-                    name.isBlank() ? null : name,
-                    species.isBlank() ? null : species,
+                    isBlank(name) ? null : name,
+                    isBlank(species) ? null : species,
                     currentVaccination,
-                    employeeName.isBlank() ? null : employeeName,
-                    employeeSurname.isBlank() ? null : employeeSurname
+                    isBlank(employeeName) ? null : employeeName,
+                    isBlank(employeeSurname) ? null : employeeSurname
             );
         }
             model.addAttribute("animals", animals);
@@ -108,15 +104,18 @@ public class AnimalController {
         }
         @PostMapping("/animals/assign/{animalId}")
     public String assignEmployeeToAnimal(@PathVariable Long animalId,@RequestParam Long employeeId){
-        animalService.assignEmployeeToAnimal(animalId,employeeId,employeeRepository);
+        animalService.assignEmployeeToAnimal(animalId,employeeId);
         return "redirect:/animals";
         }
         @GetMapping("/animals/{id}")
     public String viewAnimal(@PathVariable Long id,Model model){
         Animal animal = animalService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Animal not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Animal not found"));
         model.addAttribute("animal",animal);
         return "animal-details";
+        }
+        private boolean isBlank(String s) {
+        return s == null || s.isBlank();
         }
     }
 

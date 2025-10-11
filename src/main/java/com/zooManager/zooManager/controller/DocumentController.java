@@ -6,13 +6,16 @@ import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.DocumentRepository;
 import com.zooManager.zooManager.service.DocumentService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.print.Doc;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -64,7 +67,7 @@ public class DocumentController {
     @GetMapping("/documents/{id}")
     public String viewDocument(@PathVariable Long id,Model model){
         Document document = documentService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Document not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Document not found"));
         model.addAttribute("document",document);
         return "document-details";
 

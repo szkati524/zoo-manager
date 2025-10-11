@@ -5,9 +5,14 @@ import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EmployeeService {
@@ -19,6 +24,23 @@ public class EmployeeService {
     }
     public Employee addEmployee(Employee employee){
        return employeeRepository.save(employee);
+    }
+    public Employee addEmployeeWithImage(Employee employee, MultipartFile image) throws Exception{
+        if (employee == null){
+            throw new IllegalArgumentException("Employee cannot be null");
+        }
+        if (image != null && !image.isEmpty()){
+            Path projectDir = Paths.get(System.getProperty("user.dir"));
+            Path uploadPath = projectDir.resolve("uploads");
+            if (!Files.exists(uploadPath)){
+                Files.createDirectories(uploadPath);
+            }
+            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+            image.transferTo(filePath.toFile());
+            employee.setImagePath(fileName);
+        }
+        return employeeRepository.save(employee);
     }
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
