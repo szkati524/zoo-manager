@@ -3,6 +3,7 @@ package com.zooManager.zooManager.service;
 import com.zooManager.zooManager.Document;
 import com.zooManager.zooManager.DocumentCategory;
 import com.zooManager.zooManager.repository.DocumentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class DocumentService {
     public List<Document> getAllDocuments() {
         return documentRepository.findAll();
     }
-
+@Transactional
     public Document addDocument(Document document) {
         return documentRepository.save(document);
     }
@@ -33,16 +34,17 @@ public class DocumentService {
     public List<Document> searchDocuments(String title, DocumentCategory category, String employeeName, String employeeSurname, LocalDateTime createdAfter) {
         Specification<Document> spec = Specification.where(titleContains(title))
                 .and(categoryEquals(category))
-                .and(employeeNameContains(employeeName)
-                        .and(employeeSurnameContains(employeeSurname)
-                                .and(createdAfter(createdAfter))));
+                .and(employeeNameContains(employeeName))
+                .and(employeeSurnameContains(employeeSurname))
+                                .and(createdAfter(createdAfter));
         return documentRepository.findAll(spec);
     }
 
     @Transactional
     public void deleteDocumentById(Long id) {
-        Document document = documentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Document not found"));
+      if (!documentRepository.existsById(id)){
+          throw new EntityNotFoundException("Document not found");
+      }
 
         documentRepository.deleteById(id);
     }

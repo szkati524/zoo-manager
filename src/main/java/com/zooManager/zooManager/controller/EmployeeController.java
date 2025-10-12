@@ -49,21 +49,18 @@ public class EmployeeController {
     @PostMapping("add-employee")
     public String addEmployee(@ModelAttribute Employee employee, @RequestParam("image") MultipartFile image, Model model){
     try{
-        if (!image.isEmpty()) {
-
-
-          employeeService.addEmployeeWithImage(employee,image);
-    }
-
         if (employee.getAnimalIds() != null && !employee.getAnimalIds().isEmpty()) {
             List<Animal> selectedAnimal = animalService.findAllByIds(employee.getAnimalIds());
             employee.setAnimals(selectedAnimal);
-for (Animal animal : selectedAnimal){
-    animal.getEmployees().add(employee);
-}
+            for (Animal animal : selectedAnimal){
+                animal.getEmployees().add(employee);
+            }
         }
 
-        employeeService.addEmployee(employee);
+
+
+          employeeService.addEmployeeWithImage(employee,image);
+
         model.addAttribute("success",true);
     } catch (Exception e){
         model.addAttribute("error",true);

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.*;
 
@@ -80,6 +81,32 @@ public class EmployeeServiceTest {
         verify(employeeRepository,times(1)).deleteById(employeeId);
         verify(employeeRepository,times(1)).findById(employeeId);
 }
+@Test
+    void deleteEmployeeById_ShouldThrowException_WhenEmployeeNotFound(){
+        Long nonExistsId = 99L;
+        when(employeeRepository.findById(nonExistsId)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class,() -> {
+            employeeService.deleteEmployeeById(nonExistsId);
 
+        });
+        verify(employeeRepository,never()).deleteById(anyLong());
+}
+@Test
+    void addEmployeeWithImage_ShouldSaveEmployee_WithoutImageWhenFileIsEmpty() throws Exception {
+    MockMultipartFile emptyFile = new MockMultipartFile("image","empty.txt","text/plain",new byte[0]);
+when(employeeRepository.save(any(Employee.class))).thenReturn(testEmployee);
+employeeService.addEmployeeWithImage(testEmployee,emptyFile);
+assertNull(testEmployee.getImagePath());
+verify(employeeRepository,times(1)).save(testEmployee);
+}
+@Test
+    void addEmployeeWithImage_ShouldThrowException_WhenEmployeeIsNull(){
+        MockMultipartFile mockFile = new MockMultipartFile("image","test.jpg","image/jpeg","test".getBytes());
+        assertThrows(IllegalArgumentException.class,() -> {
+            employeeService.addEmployeeWithImage(null,mockFile);
+
+        });
+        verify(employeeRepository,never()).save(any(Employee.class  ));
+}
 
 }

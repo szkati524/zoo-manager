@@ -17,13 +17,13 @@ public interface AnimalRepository extends JpaRepository<Animal,Long> {
         AND (:species IS NULL OR LOWER(a.species) LIKE LOWER(CONCAT('%',:species,'%')))
         AND (:currentVaccination IS NULL OR a.currentVaccination = :currentVaccination)
         AND (:employeeName IS NULL OR LOWER(e.name) LIKE LOWER (CONCAT('%',:employeeName,'%')))
-        AND (:employeeName IS NULL OR LOWER(e.surname) LIKE LOWER (CONCAT('%',:employeeSurname,'%')))
+        AND (:employeeSurname IS NULL OR LOWER(e.surname) LIKE LOWER (CONCAT('%',:employeeSurname,'%')))
         """)
     List<Animal> searchAnimals(
             @Param("name")String name,
             @Param("species") String species,
             @Param("currentVaccination")Boolean currentVaccination,
-            @Param("employeeMame") String employeeName,
+            @Param("employeeName") String employeeName,
             @Param("employeeSurname") String employeeSurname
 );
 
