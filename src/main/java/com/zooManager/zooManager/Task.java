@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
+@Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,6 +16,7 @@ public class Task {
     @Lob
     private String description;
     @ManyToOne
+    @JoinColumn(name = "employee_id",nullable = false)
     private Employee assignedTo;
     private boolean completed = false;
     @CreationTimestamp
@@ -28,6 +31,14 @@ public class Task {
         this.description = description;
         this.assignedTo = assignedTo;
         this.completed = false;
+    }
+
+    public Task(Long id, String title, String description, Employee assignedTo, boolean completed) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.assignedTo = assignedTo;
+        this.completed = completed;
     }
 
     public Long getId() {
@@ -70,7 +81,33 @@ public class Task {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    protected void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return completed == task.completed && Objects.equals(id, task.id) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(assignedTo, task.assignedTo) && Objects.equals(createdAt, task.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, assignedTo, completed, createdAt);
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", assignedTo=" + assignedTo +
+                ", completed=" + completed +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }
+
