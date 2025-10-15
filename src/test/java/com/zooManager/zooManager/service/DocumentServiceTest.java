@@ -53,7 +53,7 @@ public class DocumentServiceTest {
             void addDocument_ShouldSaveAndReturnDocument(){
         when(documentRepository.save(any(Document.class))).thenReturn(testDocument);
 
-        Document result = documentService.addDocument(testDocument);
+        Document result = documentService.addDocument(testDocument,any(Employee.class));
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1L );
         verify(documentRepository,times(1)).save(testDocument);

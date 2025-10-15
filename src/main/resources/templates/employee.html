@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+
 <nav class="fixed-menu">
     <ul>
         <li><a th:href="@{/main}">Strona główna</a></li>
@@ -16,9 +16,11 @@
         <li><a th:href="@{/documents}">Dokumenty</a></li>
         <li><a th:href="@{/tasks}">Zadania</a></li>
         <li><a href="#">Ustawienia</a></li>
-        <li><a href="#">Wyloguj się</a></li>
+        <li><form th:action="@{/logout}" method="post"><button type="submit">Wyloguj się</button>
+        </form></li>
     </ul>
 </nav>
+<br><br>
 <h1>Nasi pracownicy:</h1>
     <table>
         <thead>
@@ -48,7 +50,7 @@
             <td th:text="${employee.profession}"></td>
             <td>
 
-                <form th:action="@{employee/delete/{id}(id=${employee.id})}" method="post">
+                <form sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" th:action="@{employee/delete/{id}(id=${employee.id})}" method="post">
                     <button type="submit"
                             onclick="return confirm('czy napewno chcesz usunąć pracownika?');">
                         Usuń
@@ -58,6 +60,6 @@
         </tr>
     </table>
 <br><br>
-<a class="add-button" th:href="@{/add-employee}">Dodaj pracownika</a>
+<a sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" class="add-button" th:href="@{/add-employee}">Dodaj pracownika</a>
 </body>
 </html>

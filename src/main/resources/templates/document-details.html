@@ -9,7 +9,7 @@
 
 </head>
 <body>
-<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+
 <nav class="fixed-menu">
   <ul>
     <li><a th:href="@{/main}">Strona główna</a></li>
@@ -18,9 +18,11 @@
     <li><a th:href="@{/documents}">Dokumenty</a></li>
     <li><a th:href="@{/tasks}">Zadania</a></li>
     <li><a href="#">Ustawienia</a></li>
-    <li><a href="#">Wyloguj się</a></li>
+    <li><form th:action="@{/logout}" method="post"><button type="submit">Wyloguj się</button>
+    </form></li>
   </ul>
 </nav>
+<br><br>
 <h1 th:text="${document.title}">Tytuł dokumentu</h1>
 <p><strong>Dodany:</strong><span th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></span> </p>
 <p><strong>Treść:</strong></p>

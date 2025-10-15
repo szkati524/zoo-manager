@@ -4,6 +4,7 @@ import com.zooManager.zooManager.Animal;
 import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,17 +23,19 @@ public class EmployeeService {
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
-    public Employee addEmployee(Employee employee){
-       return employeeRepository.save(employee);
+
+    public Employee addEmployee(Employee employee) {
+        return employeeRepository.save(employee);
     }
-    public Employee addEmployeeWithImage(Employee employee, MultipartFile image) throws Exception{
-        if (employee == null){
+
+    public Employee addEmployeeWithImage(Employee employee, MultipartFile image) throws Exception {
+        if (employee == null) {
             throw new IllegalArgumentException("Employee cannot be null");
         }
-        if (image != null && !image.isEmpty()){
+        if (image != null && !image.isEmpty()) {
             Path projectDir = Paths.get(System.getProperty("user.dir"));
             Path uploadPath = projectDir.resolve("uploads");
-            if (!Files.exists(uploadPath)){
+            if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
             String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
@@ -42,22 +45,28 @@ public class EmployeeService {
         }
         return employeeRepository.save(employee);
     }
-    public List<Employee> getAllEmployees(){
+
+    public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
-@Transactional
+
+    @Transactional
     public void deleteEmployeeById(Long id) {
         Employee employee = employeeRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Employee not found"));
-        for (Animal aml : employee.getAnimals()){
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        for (Animal aml : employee.getAnimals()) {
             aml.getEmployees().remove(employee);
         }
         employee.getAnimals().clear();
         employeeRepository.deleteById(id);
     }
-    public Optional<Employee> findById(Long id){
+
+    public Optional<Employee> findById(Long id) {
         return employeeRepository.findById(id);
     }
 
 
+    public Optional<Employee> findByUserName(String username) {
+       return employeeRepository.findByUsername(username);
+    }
 }

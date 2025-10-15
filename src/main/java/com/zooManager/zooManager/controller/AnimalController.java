@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +35,13 @@ public class AnimalController {
 
         this.employeeService = employeeService;
     }
-
+@PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
     @GetMapping("/add-animal")
     public String showAddAnimal(Model model) {
         model.addAttribute("animal", new Animal());
         return "add-animal";
     }
-
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
     @PostMapping("/add-animal")
     public String addAnimal(@ModelAttribute Animal animal, @RequestParam("image") MultipartFile image, Model model) {
         try{
@@ -57,7 +58,7 @@ public class AnimalController {
     }
 
 
-
+@PreAuthorize("isAuthenticated()")
     @GetMapping("/animals")
     public String searchAnimals(Model model, @RequestParam(required = false) String name,
                                 @RequestParam(required = false) String species,
@@ -91,22 +92,26 @@ public class AnimalController {
             model.addAttribute("allEmployees",employeeService.getAllEmployees());
             return "animals";
         }
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
         @PostMapping("/animals/delete/{id}")
     public String deleteAnimalsById(@PathVariable Long id){
         animalService.deleteAnimalById(id);
         return "redirect:/animals";
 
         }
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT,T(com.zooManager.zooManager.configuration.Roles).VET)")
         @PostMapping("/animals/vaccination/{id}")
     public String setVaccinationAnimal(@PathVariable Long id,@RequestParam boolean status){
         animalService.toggleVaccination(id,status);
         return "redirect:/animals";
         }
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
         @PostMapping("/animals/assign/{animalId}")
     public String assignEmployeeToAnimal(@PathVariable Long animalId,@RequestParam Long employeeId){
         animalService.assignEmployeeToAnimal(animalId,employeeId);
         return "redirect:/animals";
         }
+        @PreAuthorize("isAuthenticated()")
         @GetMapping("/animals/{id}")
     public String viewAnimal(@PathVariable Long id,Model model){
         Animal animal = animalService.findById(id)

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,19 +34,21 @@ public class EmployeeController {
     this.employeeService = employeeService;
     this.animalService = animalService;
 }
-
+@PreAuthorize("isAuthenticated()")
     @GetMapping("employee")
             public String showEmployees( Model model){
    List<Employee> employees =  employeeService.getAllEmployees();
    model.addAttribute("employees",employees);
    return "employee";
 }
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
     @GetMapping("add-employee")
     public String showAddEmployee(Model model){
     model.addAttribute("employee",new Employee());
     model.addAttribute("allAnimals",animalService.getAllAnimals());
     return "add-employee";
     }
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
     @PostMapping("add-employee")
     public String addEmployee(@ModelAttribute Employee employee, @RequestParam("image") MultipartFile image, Model model){
     try{
@@ -72,11 +75,13 @@ public class EmployeeController {
     return "add-employee";
 
     }
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
     @PostMapping("employee/delete/{id}")
     public String deleteEmployeeById(@PathVariable Long id){
     employeeService.deleteEmployeeById(id);
     return "redirect:/employee";
     }
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/employee/{id}")
     public String viewEmployee(@PathVariable Long id,Model model){
     Employee employee = employeeService.findById(id)

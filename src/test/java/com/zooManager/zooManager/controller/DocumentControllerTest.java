@@ -105,14 +105,14 @@ public class DocumentControllerTest {
     @Test
     void addDocument_Success_ShouldCallServiceAndShowSuccess() throws Exception {
         Document newDocument = new Document(null,"Test Doc","C",DocumentCategory.MEDICAL,testEmployee,LocalDateTime.now());
-        when(documentService.addDocument(any(Document.class))).thenReturn(testDocument);
+        when(documentService.addDocument(any(Document.class),any(Employee.class))).thenReturn(testDocument);
 
         mockMvc.perform(post("/add-document")
                 .flashAttr("document",newDocument))
                 .andExpect(status().isOk())
                 .andExpect(view().name("add-document"))
                 .andExpect(model().attribute("success",true));
-        verify(documentService,times(1)).addDocument(newDocument);
+        verify(documentService,times(1)).addDocument(newDocument,any(Employee.class));
 
 
 
@@ -121,13 +121,13 @@ public class DocumentControllerTest {
     @Test
     void addDocument_Failure_ShouldShowError() throws Exception{
         Document newDocument = new Document(null,"Test doc","C",DocumentCategory.MEDICAL,testEmployee,LocalDateTime.now());
-        doThrow(new RuntimeException("DB error")).when(documentService).addDocument(any(Document.class));
+        doThrow(new RuntimeException("DB error")).when(documentService).addDocument(any(Document.class),any(Employee.class));
         mockMvc.perform(post("/add-document")
                 .flashAttr("document",newDocument))
                 .andExpect(status().isOk())
                 .andExpect(view().name("add-document"))
                 .andExpect(model().attribute("error",true));
-        verify(documentService,times(1)).addDocument(any(Document.class));
+        verify(documentService,times(1)).addDocument(any(Document.class),any(Employee.class));
 
     }
     @Test

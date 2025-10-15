@@ -8,6 +8,7 @@ import com.zooManager.zooManager.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +30,7 @@ public class TaskController {
         this.employeeService = employeeService;
     }
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public String showTasks(Model model,@RequestParam(required = false) Long employeeId){
         List<Task> tasks;
         if (employeeId != null){
@@ -42,7 +44,7 @@ public class TaskController {
         model.addAttribute("employees",employeeService.getAllEmployees());
         return "tasks";
     }
-
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
     @PostMapping("/add")
     public String addTask(@RequestParam String title,
                           @RequestParam String description,
@@ -56,11 +58,13 @@ public class TaskController {
         taskService.addTask(task);
         return "redirect:/tasks";
     }
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/complete/{id}")
     public String completeTask(@PathVariable Long id){
         taskService.markAsCompleted(id);
         return "redirect:/tasks";
     }
+    @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
     @PostMapping("/delete/{id}")
     public String deleteTask(@PathVariable Long id){
         taskService.deleteTask(id);

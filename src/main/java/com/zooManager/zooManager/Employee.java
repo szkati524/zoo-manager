@@ -17,6 +17,11 @@ public class Employee {
 
     private String profession;
     private String imagePath;
+    @Column(unique = true,nullable = false)
+    private String username;
+    @Column(nullable = false)
+    private String password;
+    private String role;
     @Transient
     private List<Long> animalIds = new ArrayList<>();
 @ManyToMany(mappedBy = "employees")
@@ -30,7 +35,7 @@ private List<Document> documents = new ArrayList<>();
 
     }
 
-    public Employee(String name, String surname, String email, String profession, List<Animal> animals,List<Document> documents,String imagePath) {
+    public Employee(String name, String surname, String email, String profession, List<Animal> animals,List<Document> documents,String imagePath,String username,String password,String role) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -38,6 +43,9 @@ private List<Document> documents = new ArrayList<>();
         this.animals = animals;
         this.documents = documents;
         this.imagePath = imagePath;
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 public Employee(Long id, String name,String surname){
         this.id = id;
@@ -112,6 +120,30 @@ public Employee(Long id, String name,String surname){
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

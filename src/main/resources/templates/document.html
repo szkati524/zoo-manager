@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+
 <nav class="fixed-menu">
     <ul>
         <li><a th:href="@{/main}">Strona główna</a></li>
@@ -16,9 +16,11 @@
         <li><a th:href="@{/documents}">Dokumenty</a></li>
         <li><a th:href="@{/tasks}">Zadania</a></li>
         <li><a href="#">Ustawienia</a></li>
-        <li><a href="#">Wyloguj się</a></li>
+        <li><form th:action="@{/logout}" method="post"><button type="submit">Wyloguj się</button>
+        </form></li>
     </ul>
 </nav>
+<br><br>
 <h1>Wyszukaj:</h1>
 <form th:action="@{/documents}" method="get">
     <input type="text" name="title" placeholder="Tytuł dokumentu" >
@@ -52,7 +54,7 @@
 
                 <a th:href="@{/documents/{id}(id=${document.id})}">Zobacz</a>
 
-                <form th:action="@{/documents/delete/{id}(id=${document.id})}" method="post" style="display:inline;">
+                <form sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" th:action="@{/documents/delete/{id}(id=${document.id})}" method="post" style="display:inline;">
                     <button type="submit" onclick="return confirm('Czy na pewno chcesz usunąć dokument?');">
                         Usuń
                     </button>

@@ -1,0 +1,52 @@
+body {
+    background-image: url('../img/jungle.jpg');
+    background-size: cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.login-container{
+background:white;
+padding:2rem 3rem;
+border-radius:12px;
+box-shadow:0 0 15px rgba(0,0,0,0.15);
+width:350px;
+text-align:center;
+}
+h2{
+margin-bottom:1.5rem;
+}
+input[type="text"],input[type="password"] {
+width:100%;
+padding:0.6rem;
+margin-bottom:1rem;
+border 1px solid black;
+border-radius:6px;
+font-size:1rem;
+
+}
+button{
+width:100%;
+background: #0078d7;
+color: white;
+border: none;
+padding: 0.7rem;
+border-radius: 6px;
+font-size: 1rem;
+cursor: pointer;
+transition: background 0.2s ease;
+    }
+button:hover {
+background: #005fa3;
+}
+.error, .logout {
+margin-top: 1rem;
+font-size: 0.9rem;
+}
+.error {
+color: red;
+}
+.logout {
+color: green;
+}

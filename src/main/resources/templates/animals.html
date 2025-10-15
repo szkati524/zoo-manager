@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+
 <nav class="fixed-menu">
     <ul>
         <li><a th:href="@{/main}">Strona główna</a></li>
@@ -16,9 +16,11 @@
         <li><a th:href="@{/documents}">Dokumenty</a></li>
         <li><a th:href="@{/tasks}">Zadania</a></li>
         <li><a href="#">Ustawienia</a></li>
-        <li><a href="#">Wyloguj się</a></li>
+        <li><form th:action="@{/logout}" method="post"><button type="submit">Wyloguj się</button>
+        </form></li>
     </ul>
 </nav>
+<br><br>
 <h1>Wyszukaj:</h1>
 <form th:action="@{/animals}" method="get">
     <input type="text" name="name" placeholder="Imię zwierzęcia" th:value="${name}">
@@ -73,7 +75,7 @@
         </td>
 
             <td>
-            <form th:action="@{/animals/delete/{id}(id=${animal.id})}" method="post">
+            <form sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" th:action="@{/animals/delete/{id}(id=${animal.id})}" method="post">
                 <button type="submit"
                         onclick="return confirm('czy napewno chcesz usunąć zwierzę?');">
                     Usuń
@@ -82,7 +84,9 @@
             </form>
         </td>
         <td>
-            <form th:action="@{/animals/vaccination/{id}(id=${animal.id})}" method="post">
+            <form sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles)
+            .LEADER_SHIFT,T(com.zooManager.zooManager.configuration.Roles).VET)"
+                  th:action="@{/animals/vaccination/{id}(id=${animal.id})}" method="post">
                 <input type="hidden" name="status" th:value="${!animal.currentVaccination}"/>
                 <button type="submit"
                         th:text="${animal.currentVaccination} ? 'Nie zaszczepiony' : 'Zaszczep'">
@@ -91,7 +95,7 @@
             </form>
         </td>
         <td>
-            <form th:action="@{/animals/assign/{animalId}(animalId=${animal.id})}" method="post">
+            <form sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" th:action="@{/animals/assign/{animalId}(animalId=${animal.id})}" method="post">
                 <select name="employeeId" required>
                     <option th:each="emp : ${allEmployees}"
                             th:value="${emp.id}"
@@ -108,7 +112,7 @@
 </table>
 
 <br><br>
-<a class="add-button" th:href="@{/add-animal}">Dodaj zwierzę</a>
+<a sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" class="add-button" th:href="@{/add-animal}">Dodaj zwierzę</a>
 
 </body>
 </html>

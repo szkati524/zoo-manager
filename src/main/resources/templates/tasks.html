@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<h1>AJOHGJAHJJIOHJ  MSWMOHOHMS SHK <br> akgksaokjokjjskojkookjokjokjokejopopjj</h1>
+
 <nav class="fixed-menu">
     <ul>
         <li><a th:href="@{/main}">Strona główna</a></li>
@@ -16,9 +16,11 @@
         <li><a th:href="@{/documents}">Dokumenty</a></li>
         <li><a th:href="@{/tasks}">Zadania</a></li>
         <li><a href="#">Ustawienia</a></li>
-        <li><a href="#">Wyloguj się</a></li>
+        <li><form th:action="@{/logout}" method="post"><button type="submit">Wyloguj się</button>
+        </form></li>
     </ul>
 </nav>
+<br><br>
 <h1>Zadania</h1>
 <table>
     <thead>
@@ -43,20 +45,20 @@
         <form th:action="@{/tasks/complete/{id}(id=${task.id})}" method="post" th:if="${!task.completed}">
             <button type="submit">Oznacz jako wykonany</button>
         </form>
-        <form th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post">
+        <form sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post">
             <button type="submit">Usuń</button>
         </form>
     </td>
 
 </tr>
-<h2>Dodaj nowe zadanie</h2>
+<h2 sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)">Dodaj nowe zadanie</h2>
 <form th:action="@{/tasks/add}" method="post">
     <label>Tytuł:</label>
     <input type="text" name="title" required><br>
     <label>Opis:</label>
     <textarea name="description"></textarea><br>
 
-    <label>Przypisz do pracownika</label>
+    <label sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)">Przypisz do pracownika</label>
     <select name="employeeId" required>
         <option th:each="emp : ${employees}"
                 th:value="${emp.id}"
@@ -64,7 +66,7 @@
 
         </option>
     </select><br>
-    <button type="submit">Dodaj zadanie</button>
+    <button sec:authorize="hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN, T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)" type="submit">Dodaj zadanie</button>
 </form>
 </table>
 </body>
