@@ -52,6 +52,14 @@ public Employee(Long id, String name,String surname){
         this.name = name;
         this.surname = surname;
 }
+    public Employee(String name, String surname, String email, String username, String password, String role) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
     public Long getId() {
         return id;
     }

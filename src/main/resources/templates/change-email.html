@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="${document.title}">Szczegóły dokumentu</title>
+  <title>Zoo-Manager-Main</title>
   <link rel="stylesheet" href="../css/style.css">
-
-
 </head>
+
 <body>
 
 <nav class="fixed-menu">
@@ -19,15 +18,17 @@
     <li><a th:href="@{/tasks}">Zadania</a></li>
     <li><a th:href="@{/settings}">Ustawienia</a></li>
     <li><form th:action="@{/logout}" method="post"><button type="submit">Wyloguj się</button>
-    </form></li>
+    </form>
+    </li>
   </ul>
 </nav>
-<br><br>
-<h1 th:text="${document.title}">Tytuł dokumentu</h1>
-<p><strong>Dodany:</strong><span th:text="${#temporals.format(document.createdAt, 'yyyy-MM-dd HH:mm')}"></span> </p>
-<p><strong>Treść:</strong></p>
-<div th:text="${document.content}"></div>
-<a th:href="@{/documents}">-Powrót do listy-</a>
-
+<h2>Zmień email</h2>
+<form action="/settings/change-email" method="post">
+  <label>Nowy email:</label>
+  <input type="email" name="newEmail" required>
+  <label>Wpisz hasło</label>
+  <input type="password" name="passwordConfirm" required>
+  <button type="submit">Zmień email</button>
+</form>
 </body>
 </html>
