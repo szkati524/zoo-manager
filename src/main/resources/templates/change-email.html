@@ -23,6 +23,12 @@
   </ul>
 </nav>
 <h2>Zmień email</h2>
+<div th:if="${errorPassword}" class="error">
+  <p th:text="${errorPassword}"></p>
+</div>
+<div th:if="${successPassword}" class="success">
+  <p th:text="${successPassword}"></p>
+</div>
 <form action="/settings/change-email" method="post">
   <label>Nowy email:</label>
   <input type="email" name="newEmail" required>

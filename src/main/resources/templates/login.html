@@ -7,7 +7,11 @@
 
 </head>
 <body>
+
 <div class="login-container">
+    <div th:if="${successPassword}" class="success">
+        <p th:text="${successPassword}"></p>
+    </div>
     <h2>Logowanie</h2>
     <form th:action="@{/login}" method="post">
         <input type="text" name="username" placeholder="Nazwa Użytkownika" required>

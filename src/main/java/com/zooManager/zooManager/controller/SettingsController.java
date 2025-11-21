@@ -2,8 +2,10 @@ package com.zooManager.zooManager.controller;
 
 import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.EmployeeRepository;
+import com.zooManager.zooManager.service.EmailChangeService;
+import com.zooManager.zooManager.service.PasswordChangeService;
+import com.zooManager.zooManager.service.SettingsService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +23,15 @@ public class SettingsController {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SettingsController(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+    private final PasswordChangeService passwordChangeService;
+    private final EmailChangeService emailChangeService;
+
+    public SettingsController(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder,  PasswordChangeService passwordChangeService, EmailChangeService emailChangeService) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
+
+        this.passwordChangeService = passwordChangeService;
+        this.emailChangeService = emailChangeService;
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/change-password")
@@ -51,13 +59,12 @@ public class SettingsController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (!passwordEncoder.matches(oldPassword,user.getPassword())){
             redirectAttributes.addFlashAttribute("errorPassword","Stare hasło jest nieprawidłowe");
-            return "redirect:/settings";
+            return "redirect:/settings/change-password";
 
         }
-        user.setPassword(passwordEncoder.encode(newPassword));
-        employeeRepository.save(user);
-        redirectAttributes.addFlashAttribute("successPassword","Hasło zmienione pomyślnie!");
-        return "redirect:/settings";
+       passwordChangeService.requestPasswordChange(user,newPassword);
+        redirectAttributes.addFlashAttribute("successPassword","Wysłaliśmy link potwierdzający na email!");
+        return "redirect:/settings/change-password";
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/change-email")
@@ -69,9 +76,28 @@ public class SettingsController {
             return "redirect:/settings";
 
         }
-        user.setEmail(newEmail);
-        employeeRepository.save(user);
-        redirectAttributes.addFlashAttribute("successEmail","Email zostal zmieniony pomyślnie!");
+       emailChangeService.requestEmailChange(user,newEmail);
+        redirectAttributes.addFlashAttribute("successEmail","Wysłano link potwierdzający na nowy email!");
+        return "redirect:/settings/change-email";
+    }
+    @GetMapping("/confirm-password-change")
+    public String confirmPasswordChange(@RequestParam String token,RedirectAttributes redirectAttributes){
+        boolean success = passwordChangeService.confirmPasswordChange(token);
+        if (!success){
+            redirectAttributes.addFlashAttribute("errorPassword","Token wygasł lub jest nieprawidłowy!");
+            return "redirect:/login";
+        }
+        redirectAttributes.addFlashAttribute("successPassword","Hasło zostało zmienione! zaloguj się używając nowego hasła.");
+        return "redirect:/login";
+    }
+    @GetMapping("/confirm-email-change")
+    public String confirmEmailChange(@RequestParam String token,RedirectAttributes redirectAttributes){
+        boolean success = emailChangeService.confirmEmailChange(token);
+        if (!success){
+            redirectAttributes.addFlashAttribute("errorEmail","Token wygasł lub jest nieprawidłowy");
+        } else {
+            redirectAttributes.addFlashAttribute("successEmail", "Email został zmieniony pomyślnie!");
+        }
         return "redirect:/settings";
     }
 

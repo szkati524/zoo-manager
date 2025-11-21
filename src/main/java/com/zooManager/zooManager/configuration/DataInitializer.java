@@ -25,7 +25,7 @@ public class DataInitializer {
                   Employee admin = new Employee(
                           "Admin",
                           "Super",
-                          "admin@example.com",
+                          "szkatsebastian@gmail.com",
                           "admin",
                           passwordEncoder.encode("admin123"),
                           "ADMIN"
