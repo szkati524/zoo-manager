@@ -27,10 +27,18 @@
     <input type="text" id="name" th:field="*{name}" required>
     <label for="surname">Nazwisko:</label>
     <input type="text" id="surname" th:field="*{surname}" required>
+    <label for="username">Login:</label>
+    <input type="text" id="username" th:field="*{username}" required>
+    <label for="password">Hasło:</label>
+    <input type="password" id="password" th:field="*{password}" required>
     <label for="email">Email:</label>
     <input type="email" id="email" th:field="*{email}" required>
     <label for="profession">Zawód:</label>
-    <input type="text" id="profession" th:field="*{profession}" required>
+    <select id="profession" th:field="*{profession}" required>
+        <option value="" disabled selected>Wybierz zawód:</option>
+        <option th:each="role : ${roles}"
+                th:value="${role}"
+                th:text="${role}"></option>
     <label>Zdjęcie:</label>
     <input type="file" name="image">
     <label for="animals">Przypisz zwierzęta(opcjonalnie):</label>

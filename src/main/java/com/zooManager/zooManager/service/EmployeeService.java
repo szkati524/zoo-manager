@@ -4,7 +4,7 @@ import com.zooManager.zooManager.Animal;
 import com.zooManager.zooManager.Employee;
 import com.zooManager.zooManager.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,19 +18,33 @@ import java.util.UUID;
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Employee addEmployee(Employee employee) {
+        if(employee.getPassword() != null){
+            employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        }
+        if (employee.getRole() == null){
+            employee.setRole("ZOOKEEPER");
+        }
         return employeeRepository.save(employee);
     }
 
     public Employee addEmployeeWithImage(Employee employee, MultipartFile image) throws Exception {
         if (employee == null) {
             throw new IllegalArgumentException("Employee cannot be null");
+        }
+        if (employee.getPassword() != null){
+            employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+        }
+        if (employee.getRole() == null){
+            employee.setRole("ZOOKEEPER");
         }
         if (image != null && !image.isEmpty()) {
             Path projectDir = Paths.get(System.getProperty("user.dir"));

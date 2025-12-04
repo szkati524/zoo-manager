@@ -2,25 +2,22 @@ package com.zooManager.zooManager.controller;
 
 import com.zooManager.zooManager.Animal;
 import com.zooManager.zooManager.Employee;
+import com.zooManager.zooManager.configuration.Roles;
 import com.zooManager.zooManager.service.AnimalService;
 import com.zooManager.zooManager.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 
 @Controller
@@ -29,10 +26,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final AnimalService animalService;
+    private final PasswordEncoder passwordEncoder;
 @Autowired
-    public EmployeeController(EmployeeService employeeService, AnimalService animalService) {
+    public EmployeeController(EmployeeService employeeService, AnimalService animalService, PasswordEncoder passwordEncoder) {
     this.employeeService = employeeService;
     this.animalService = animalService;
+    this.passwordEncoder = passwordEncoder;
 }
 @PreAuthorize("isAuthenticated()")
     @GetMapping("employee")
@@ -46,6 +45,7 @@ public class EmployeeController {
     public String showAddEmployee(Model model){
     model.addAttribute("employee",new Employee());
     model.addAttribute("allAnimals",animalService.getAllAnimals());
+    model.addAttribute("roles", Roles.values());
     return "add-employee";
     }
     @PreAuthorize("hasAnyRole(T(com.zooManager.zooManager.configuration.Roles).ADMIN,T(com.zooManager.zooManager.configuration.Roles).LEADER_SHIFT)")
@@ -55,6 +55,8 @@ public class EmployeeController {
         if (employee.getAnimalIds() != null && !employee.getAnimalIds().isEmpty()) {
             List<Animal> selectedAnimal = animalService.findAllByIds(employee.getAnimalIds());
             employee.setAnimals(selectedAnimal);
+            employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+            employee.setRole(employee.getProfession());
             for (Animal animal : selectedAnimal){
                 animal.getEmployees().add(employee);
             }
@@ -72,6 +74,15 @@ public class EmployeeController {
     }
     model.addAttribute("employee",new Employee());
     model.addAttribute("allAnimals",animalService.getAllAnimals());
+    model.addAttribute("roles",List.of(
+            Roles.ADMIN,
+            Roles.LEADER_SHIFT,
+            Roles.VET,
+            Roles.ZOOKEEPER
+    ));
+        log.info("Dodawany pracownik: username={}, password={}, role={}",
+                employee.getUsername(), employee.getPassword(), employee.getRole());
+
     return "add-employee";
 
     }
