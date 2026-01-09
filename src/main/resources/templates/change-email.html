@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zoo-Manager-Main</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -17,24 +17,32 @@
     <li><a th:href="@{/documents}">Dokumenty</a></li>
     <li><a th:href="@{/tasks}">Zadania</a></li>
     <li><a th:href="@{/settings}">Ustawienia</a></li>
-    <li><form th:action="@{/logout}" method="post"><button type="submit">Wyloguj się</button>
-    </form>
+    <li>
+      <form th:action="@{/logout}" method="post">
+        <button type="submit">Wyloguj się</button>
+      </form>
     </li>
   </ul>
 </nav>
+
 <h2>Zmień email</h2>
-<div th:if="${errorPassword}" class="error">
-  <p th:text="${errorPassword}"></p>
+
+<div th:if="${errorEmail}" class="error" style="color: red;">
+  <p th:text="${errorEmail}"></p>
 </div>
-<div th:if="${successPassword}" class="success">
-  <p th:text="${successPassword}"></p>
+<div th:if="${successEmail}" class="success" style="color: green;">
+  <p th:text="${successEmail}"></p>
 </div>
-<form action="/settings/change-email" method="post">
+
+<form th:action="@{/settings/change-email}" method="post">
   <label>Nowy email:</label>
   <input type="email" name="newEmail" required>
-  <label>Wpisz hasło</label>
-  <input type="password" name="passwordConfirm" required>
+
+  <label>Wpisz hasło:</label>
+  <input type="password" name="passwordConfirmation" required>
+
   <button type="submit">Zmień email</button>
 </form>
+
 </body>
 </html>

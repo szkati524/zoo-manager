@@ -34,6 +34,8 @@ public class AnimalRepositoryTest {
         employeeRepository.deleteAll();
         anna = new Employee(null,"Anna","Nowak");
         anna.setEmail("anna@zoo.com");
+        anna.setUsername("anna");
+        anna.setPassword("password");
         anna = employeeRepository.save(anna);
         reks = new Animal(null,"Reks","Pies",true   );
         reks.setEmployees(new java.util.ArrayList<>(Collections.singletonList(anna)));

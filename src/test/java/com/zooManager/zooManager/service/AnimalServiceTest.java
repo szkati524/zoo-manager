@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
 
 ;
@@ -242,6 +243,20 @@ public class AnimalServiceTest {
         assertEquals(2,result.size());
         verify(animalRepository,times(1)).findAllById(ids);
 }
+@Test
+    void addAnimalWithImage_ShouldSaveAnimalWithFileName() throws Exception{
+    MockMultipartFile image = new MockMultipartFile(
+            "image","dog.jpg","image.jpeg","some-data".getBytes()
+    );
+    when(animalRepository.save(any(Animal.class))).thenReturn(testAnimal);
+    Animal result = animalService.addAnimalWithImage(testAnimal,image);
+    assertNotNull(result.getImagePath());
+    assertTrue(result.getImagePath().contains("dog.jpg"));
+    verify(animalRepository).save(testAnimal);
+
+
+}
+
     }
 
 

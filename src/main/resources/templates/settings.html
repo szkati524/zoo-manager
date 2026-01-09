@@ -30,6 +30,12 @@
     <br>
     <li><a href="/settings/change-email">Zmień Email</a></li>
 </ul>
+<div th:if="${successEmail}">
+    <p th:text="${successEmail}"></p>
+</div>
+<div th:if="${errorEmail}">
+    <p th:if="${errorEmail}"></p>
+</div>
 
 </body>
 </html>

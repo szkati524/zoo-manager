@@ -5,6 +5,7 @@ import com.zooManager.zooManager.configuration.EmailChangeToken;
 import com.zooManager.zooManager.configuration.EmailSender;
 import com.zooManager.zooManager.repository.EmailChangeTokenRepository;
 import com.zooManager.zooManager.repository.EmployeeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class EmailChangeService {
 
 
     }
+    @Transactional
     public boolean confirmEmailChange(String tokenValue){
         EmailChangeToken token = emailChangeTokenRepository.findByToken(tokenValue)
                 .orElse(null);

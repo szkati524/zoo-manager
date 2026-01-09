@@ -73,7 +73,7 @@ public class SettingsController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (!passwordEncoder.matches(passwordConfirmation,user.getPassword())){
             redirectAttributes.addFlashAttribute("errorEmail","Hasło nieprawidłowe!");
-            return "redirect:/settings";
+            return "redirect:/settings/change-email";
 
         }
        emailChangeService.requestEmailChange(user,newEmail);

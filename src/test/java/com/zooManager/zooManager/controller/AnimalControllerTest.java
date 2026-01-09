@@ -16,12 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 @WebMvcTest(AnimalController.class)
+
 public class AnimalControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -47,6 +50,7 @@ public class AnimalControllerTest {
     private Employee testEmployee;
 
     @BeforeEach
+
     void setUp(){
         testAnimal = new Animal(1L,"Reks","Pies",false);
         testEmployee = new Employee(5L,"Jan","Kowalski");
@@ -55,6 +59,7 @@ public class AnimalControllerTest {
 
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void showAddAnimal_ShouldReturnAddAnimalView()throws Exception{
         mockMvc.perform(get("/add-animal"))
                 .andExpect(status().isOk())
@@ -62,6 +67,7 @@ public class AnimalControllerTest {
                 .andExpect(model().attributeExists("animal"));
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void searchAnimals_NoFilters_ShouldReturnAllAnimals() throws Exception{
         List<Animal> allAnimals = List.of(testAnimal);
         when(animalService.getAllAnimals()).thenReturn(allAnimals);
@@ -74,6 +80,7 @@ public class AnimalControllerTest {
         verify(animalService,never()).searchAnimal(any(),any(),any(),any(),any());
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void searchAnimals_WithFilter_ShouldCallSearchAnimal() throws Exception{
         String filterName = "Reks";
         List<Animal> foundAnimals = List.of(testAnimal);
@@ -94,6 +101,7 @@ public class AnimalControllerTest {
         verify(animalService,never()).getAllAnimals();
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
 void viewAnimal_ShouldReturnAnimalDetailsView() throws Exception{
         when(animalService.findById(1L)).thenReturn(Optional.of(testAnimal));
         mockMvc.perform(get("/animals/1"))
@@ -103,42 +111,51 @@ void viewAnimal_ShouldReturnAnimalDetailsView() throws Exception{
 
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void viewAnimal_NotFound_ShouldReturn404() throws Exception{
         when(animalService.findById(99L)).thenReturn(Optional.empty());
         mockMvc.perform(get("/animals/99"))
                 .andExpect(status().isNotFound());
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void addAnimal_WithoutImage_ShouldCallServiceAndShowSuccess() throws Exception{
         when(animalService.addAnimal(any(Animal.class))).thenReturn(testAnimal);
         MockMultipartFile emptyFile = new MockMultipartFile("image","filename.txt","text/plain",new byte[0]);
         mockMvc.perform(multipart("/add-animal")
                 .file(emptyFile)
-                .flashAttr("animal",new Animal(1L,"Reks","Pies",false)))
+                .flashAttr("animal",new Animal(1L,"Reks","Pies",false))
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("add-animal"))
                 .andExpect(model().attribute("success",true));
         verify(animalService,times(1)).addAnimalWithImage(any(Animal.class),any());
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void deleteAnimalsById_ShouldCallServiceAndDeleteAndRedirect() throws Exception{
-        mockMvc.perform(post("/animals/delete/{id}",1L))
+        mockMvc.perform(post("/animals/delete/{id}",1L)
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/animals"));
         verify(animalService,times(1)).deleteAnimalById(1L);
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void setVaccinationAnimal_ShouldCallServiceAndRedirect() throws Exception{
         mockMvc.perform(post("/animals/vaccination/{id}",1L)
+                        .with(csrf())
                 .param("status","true"))
                 .andExpect(redirectedUrl("/animals"));
         verify(animalService,times(1)).toggleVaccination(1L,true);
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
     void assignEmployeeToAnimal_ShouldCallServiceAndRedirect() throws Exception{
         long animalId = 1;
         long employeeId = 5;
         mockMvc.perform(post("/animals/assign/{animalId}",animalId)
+                        .with(csrf())
                 .param("employeeId",String.valueOf(employeeId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/animals"));
