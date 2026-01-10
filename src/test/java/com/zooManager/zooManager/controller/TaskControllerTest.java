@@ -11,12 +11,14 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -28,6 +30,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(TaskController.class)
+@WithMockUser(roles = "ADMIN")
 public class TaskControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -42,6 +45,8 @@ public class TaskControllerTest {
 @BeforeEach
 void setUp(){
     testEmployee = new Employee(5L,"Anna","Nowak");
+    testEmployee.setUsername("anna");
+    testEmployee.setPassword("1234");
     testTask = new Task(1L,"nakarm lwa","tresc...",testEmployee,false);
     when(employeeService.getAllEmployees()).thenReturn(Collections.singletonList(testEmployee));
 
@@ -50,7 +55,8 @@ void setUp(){
 void showTasks_NoFilter_ShouldCallGetTasks()throws Exception{
     List<Task> allTasks = Collections.singletonList(testTask);
     when(taskService.getAllTasks()).thenReturn(allTasks);
-    mockMvc.perform(get("/tasks"))
+    mockMvc.perform(get("/tasks")
+                    .with(csrf()))
             .andExpect(status().isOk())
             .andExpect(view().name("tasks"))
             .andExpect(model().attribute("tasks",hasSize(1)));
@@ -84,6 +90,7 @@ void showTasks_NoFilter_ShouldCallGetTasks()throws Exception{
     void addTasks_Success_ShouldCallServiceAndRedirect()throws Exception{
     when(employeeService.findById(5L)).thenReturn(Optional.of(testEmployee));
     mockMvc.perform(post("/tasks/add")
+                    .with(csrf())
             .param("title","nowe zadanie")
             .param("description","Opis")
             .param("employeeId","5"))
@@ -96,6 +103,7 @@ void showTasks_NoFilter_ShouldCallGetTasks()throws Exception{
     void addTask_InvalidTitle_ShouldReturn404() throws Exception{
     when(employeeService.findById(5L)).thenReturn(Optional.of(testEmployee));
     mockMvc.perform(post("/tasks/add")
+                    .with(csrf())
             .param("title"," ")
             .param("description","Opis")
             .param("employeeId","5"))
@@ -106,6 +114,7 @@ void showTasks_NoFilter_ShouldCallGetTasks()throws Exception{
         void addTask_InvalidEmployee_ShouldThrowTaskNotFoundException()throws Exception{
     when(employeeService.findById(99L)).thenReturn(Optional.empty());
     mockMvc.perform(post("/tasks/add")
+                    .with(csrf())
             .param("title","Test")
             .param("description","Opis")
             .param("employeeId","99"))
@@ -115,7 +124,8 @@ void showTasks_NoFilter_ShouldCallGetTasks()throws Exception{
      void completeTask_Success_ShouldCallServiceAndRedirect() throws Exception{
     Long taskId = 1L;
 
-    mockMvc.perform(post("/tasks/complete/{id}",taskId))
+    mockMvc.perform(post("/tasks/complete/{id}",taskId)
+                    .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/tasks"));
     verify(taskService,times(1)).markAsCompleted(taskId);
@@ -124,13 +134,15 @@ void showTasks_NoFilter_ShouldCallGetTasks()throws Exception{
     void completeTask_NotFound_ShouldPropagateException() throws Exception{
     Long taskId = 99L;
     doThrow(new TaskNotFoundException(taskId)).when(taskService).markAsCompleted(taskId);
-    mockMvc.perform(post("/tasks/complete/{id}",taskId))
+    mockMvc.perform(post("/tasks/complete/{id}",taskId)
+                    .with(csrf()))
             .andExpect(status().isNotFound());
 }
 @Test
     void deleteTask_Success_ShouldCallAndRedirect()throws Exception{
     Long taskId = 1L;
-    mockMvc.perform(post("/tasks/delete/{id}",taskId))
+    mockMvc.perform(post("/tasks/delete/{id}",taskId)
+                    .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/tasks"));
     verify(taskService,times(1)).deleteTask(taskId);
@@ -140,7 +152,7 @@ void showTasks_NoFilter_ShouldCallGetTasks()throws Exception{
     void deleteTask_NotFound_ShouldPropagateException() throws Exception{
     Long taskId = 99L;
     doThrow(new TaskNotFoundException(taskId)).when(taskService).deleteTask(taskId);
-    mockMvc.perform(post("/tasks/delete/{id}",taskId)).andExpect(status().isNotFound());
+    mockMvc.perform(post("/tasks/delete/{id}",taskId).with(csrf())).andExpect(status().isNotFound());
 }
 
 }

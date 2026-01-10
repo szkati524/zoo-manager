@@ -38,6 +38,10 @@ private Document docMarekMedical;
     marek = new Employee(null,"Marek","Nowakowski");
     anna.setProfession("Opiekun");
     marek.setProfession("Weterynarz");
+    anna.setUsername("anna");
+    anna.setPassword("1234");
+    marek.setUsername("marek");
+    marek.setPassword("1234");
     employeeRepository.save(anna);
     employeeRepository.save(marek);
     docAnnaAnimal = new Document(

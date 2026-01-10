@@ -29,6 +29,8 @@ public class EmployeeRepositoryTest {
 employeeRepository.deleteAll();
 testEmployee = new Employee(null,"Jan","Kowalski");
 testEmployee.setEmail("jan.kowalski@o2.pl");
+testEmployee.setUsername("jan");
+testEmployee.setPassword("1234");
 
 
     }
@@ -42,6 +44,8 @@ testEmployee.setEmail("jan.kowalski@o2.pl");
     @Test
     void findAll_ShouldReturnAllEmployees(){
         Employee employee2 = new Employee(null,"anna","nowak");
+        employee2.setUsername("anna");
+        employee2.setPassword("1234");
         employeeRepository.save(testEmployee);
         employeeRepository.save(employee2);
         List<Employee> employees = employeeRepository.findAll();

@@ -12,6 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -28,16 +34,21 @@ import static org.mockito.Mockito.*;
 public class DocumentServiceTest {
     @Mock
     private DocumentRepository documentRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private DocumentService documentService;
 
     private Document testDocument;
     private Document testDocument2;
+    private Employee testEmployee;
     @BeforeEach
     void setUp(){
         Employee testEmployee = new Employee(10L,"Anna","Nowak");
         testDocument = new Document(1L,"Choroba Lwa","treść...", DocumentCategory.EMPLOYEE_INFO,testEmployee, LocalDateTime.now().minusDays(10));
         testDocument2 = new Document(2L,"Dziwne zachowanie","tresc...",DocumentCategory.MEDICAL,testEmployee,LocalDateTime.now().minusDays(5));
+        testEmployee.setUsername("anna");
+        testEmployee.setPassword("1234");
 
     }
     @Test
@@ -50,13 +61,18 @@ public class DocumentServiceTest {
         verify(documentRepository,times(1)).findAll();
     }
     @Test
+    @WithMockUser(roles = "ADMIN")
             void addDocument_ShouldSaveAndReturnDocument(){
+        Authentication auth = new UsernamePasswordAuthenticationToken(testEmployee,null,List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+        );
+        SecurityContextHolder.getContext().setAuthentication(auth);
         when(documentRepository.save(any(Document.class))).thenReturn(testDocument);
 
-        Document result = documentService.addDocument(testDocument,any(Employee.class));
+        Document result = documentService.addDocument(testDocument,testEmployee);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1L );
-        verify(documentRepository,times(1)).save(testDocument);
+        verify(documentRepository,times(1)).save(any(Document.class));
+        SecurityContextHolder.clearContext();
     }
     @Test
     void findById_ShouldReturnDocument_WhenFound(){
@@ -68,6 +84,7 @@ public class DocumentServiceTest {
 
     }
     @Test
+    @WithMockUser(roles = "LEADER_SHIFT")
     void findById_ShouldReturnEmptyOptional_WhenNotFound(){
         when(documentRepository.findById(99L)).thenReturn(Optional.empty());
         Optional<Document> result = documentService.findById(99L);

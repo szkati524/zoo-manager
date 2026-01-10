@@ -32,8 +32,12 @@ public class TaskRepositoryTest {
         taskRepository.deleteAll();
         employeeRepository.deleteAll();
         anna = new Employee(null,"Anna","Nowak");
+        anna.setUsername("anna");
+        anna.setPassword("1234");
         anna = employeeRepository.save(anna);
         marek = new Employee(null,"Marek","Nowakowski");
+        marek.setUsername("marek");
+        marek.setPassword("1234");
         marek = employeeRepository.save(marek);
         annaTask = new Task(null,"Nakarm lwa","Opis A",anna,false);
         annaTask2 = new Task(null,"nakarm pingwina","Opis B",anna,false);
@@ -76,6 +80,8 @@ public class TaskRepositoryTest {
     @Test
     void findAllByAssignedTo_ShouldReturnEmptyList_WhenNoTasksFound(){
         Employee nonAssignedEmployee = new Employee(null,"Kasia","Jarząbek");
+        nonAssignedEmployee.setUsername("none");
+        nonAssignedEmployee.setPassword("1234");
         nonAssignedEmployee = employeeRepository.save(nonAssignedEmployee);
         List<Task> kasiaTasks = taskRepository.findAllByAssignedTo(nonAssignedEmployee);
         assertThat(kasiaTasks).isEmpty();

@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
@@ -24,6 +25,8 @@ public class EmployeeServiceTest {
     private AnimalRepository animalRepository;
     @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private EmployeeService employeeService;
     private Employee testEmployee;
